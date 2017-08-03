@@ -1,0 +1,6 @@
+tasks:
+  docker:
+    - name: hello
+      image: debian:jessie
+    - name: hello2
+    - name: debian:jessie
