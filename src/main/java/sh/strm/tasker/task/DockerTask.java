@@ -8,7 +8,7 @@ public class DockerTask extends Task {
 	private String[] environment;
 
 	private String entrypoint;
-	private String arguments;
+	private String[] arguments;
 
 	public String getImage() {
 		return image;
@@ -34,17 +34,12 @@ public class DockerTask extends Task {
 		this.entrypoint = entrypoint;
 	}
 
-	public String getArguments() {
+	public String[] getArguments() {
 		return arguments;
 	}
 
-	public void setArguments(String arguments) {
+	public void setArguments(String[] arguments) {
 		this.arguments = arguments;
-	}
-
-	@Override
-	public String toString() {
-		return "DockerTask [image=" + image + ", environment=" + Arrays.toString(environment) + ", entrypoint=" + entrypoint + ", arguments=" + arguments + "]";
 	}
 
 }
