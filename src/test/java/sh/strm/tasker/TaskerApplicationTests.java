@@ -7,12 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import sh.strm.tasker.task.DockerTaskRunner;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TaskerApplicationTests {
 
 	@Autowired
 	private TaskConfiguration conf;
+	
+	@Autowired
+	private DockerTaskRunner dockerRunner;
 
 	@Test
 	public void contextLoads() {
@@ -32,6 +37,12 @@ public class TaskerApplicationTests {
 	@Test
 	public void testDockerConfigurationImageName() {
 		assertEquals("debian:jessie", conf.getDocker().get(0).getImage());
+	}
+	
+	@Test
+	public void testDockerRunContainer() throws Exception {
+		String out = dockerRunner.executeTask(conf.getDocker().get(0));
+		assertEquals("green bar", out);
 	}
 
 }
