@@ -3,6 +3,8 @@ tasks:
     - name: hello
       image: debian:jessie
       entrypoint: /bin/bash
-      arguments: -c,echo green bar
+      arguments:
+        - -c
+        - echo green bar
     - name: hello2
     - name: debian:jessie
