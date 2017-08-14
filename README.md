@@ -29,7 +29,7 @@ tasks:
   blacklist-generator:
     executer: docker
     image: strm/task-blacklist
-    reuse: true # Create a container and resue it instead of creating a new one
+    reuse: true # Create a container and reuse it instead of creating a new one
     
 ```
 
