@@ -6,5 +6,3 @@ tasks:
       arguments:
         - -c
         - echo green bar
-    - name: hello2
-    - name: debian:jessie
