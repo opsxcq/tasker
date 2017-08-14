@@ -1,7 +1,9 @@
 package sh.strm.tasker.task;
 
-public abstract class Runner {
+import sh.strm.tasker.runner.TaskExecutionResult;
 
-	public abstract boolean executeTask(Task task);
+public abstract class Runner<T extends Task> {
+
+	public abstract TaskExecutionResult executeTask(T task) throws Exception;
 	
 }
