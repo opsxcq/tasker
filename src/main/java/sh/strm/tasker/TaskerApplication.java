@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 
 import com.spotify.docker.client.DefaultDockerClient;
 
-import sh.strm.tasker.task.DockerTaskRunner;
+import sh.strm.tasker.runner.DockerTaskRunner;
 
 @SpringBootApplication
 public class TaskerApplication {
