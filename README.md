@@ -35,16 +35,16 @@ tasks:
 
 # Configuration
 
-##Tasks
+## Tasks
 
-###Docker tasks
+### Docker tasks
 
 Configurations
 
  * `image` - the image in the very same format as it is expressed for docker, in `repo/image:tag` for images in the default repository, of `server/repo/image:tag` for images residing somewhere else.
  * `reuse` - Default is `false`, if set to `true`, the container will be created only once, and then, reused for every execution 
  
- ####Entrypoint and Arguments
+ #### Entrypoint and Arguments
  
 You can pass parameters to your task and set the entrypoint of the image as you pass in docker command line. Example:
 
