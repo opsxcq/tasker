@@ -26,10 +26,10 @@ listeners:
 events:
 
 tasks:
-  blacklist-generator:
-    executer: docker
-    image: strm/task-blacklist
-    reuse: true # Create a container and reuse it instead of creating a new one
+  docker:
+    - name: test
+      image: strm/task-blacklist
+      reuse: true # Create a container and reuse it instead of creating a new one
     
 ```
 

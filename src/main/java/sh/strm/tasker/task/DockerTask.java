@@ -1,7 +1,5 @@
 package sh.strm.tasker.task;
 
-import java.util.Arrays;
-
 public class DockerTask extends Task {
 
 	private String image;
