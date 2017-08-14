@@ -9,17 +9,9 @@ config:
 notifiers:
 
 schedules:
-  every:
-    5-minutes:
-      - blacklist-generator
-  hourly:
-    - blacklist-generator
-  daily:
-    - blacklist-generator
-  weekly:
-    - blacklist-generator
-  montly:
-    - blacklist-generator
+  - every: 5 minutes
+    task: test
+  - cron
 
 listeners:
 
@@ -28,7 +20,8 @@ events:
 tasks:
   docker:
     - name: test
-      image: strm/task-blacklist
+      image: debian:jessie
+      
       reuse: true # Create a container and reuse it instead of creating a new one
     
 ```
