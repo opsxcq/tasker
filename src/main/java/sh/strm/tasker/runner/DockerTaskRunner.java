@@ -2,6 +2,8 @@ package sh.strm.tasker.runner;
 
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient.LogsParam;
 import com.spotify.docker.client.messages.ContainerConfig;
@@ -13,6 +15,8 @@ import sh.strm.tasker.task.DockerTask;
 
 public class DockerTaskRunner extends Runner<DockerTask> {
 
+	static Logger log = Logger.getLogger(DockerTaskRunner.class.getName());
+
 	private DefaultDockerClient docker;
 
 	public DockerTaskRunner() throws Exception {
@@ -20,6 +24,8 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 	}
 
 	public TaskExecutionResult executeTask(DockerTask task) throws Exception {
+		long timeStart = System.currentTimeMillis();
+		log.info("Starting the execution of the " + task.getName() + " task");
 
 		TaskExecutionResult result = new TaskExecutionResult(task);
 
@@ -32,17 +38,17 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		if (task.getArguments() != null) {
 			container = container.cmd(task.getArguments());
 		}
-		
+
 		// If we got a script property, ignore everything else and use this
-		if(task.getScript() != null){
+		if (task.getScript() != null) {
 			container = container.entrypoint("/bin/sh");
 			// TODO : Check if the container has /bin/sh executable
-			
+
 			// For every script line, create a monster script to pass to our shell
 			StringBuilder arguments = new StringBuilder();
 			Arrays.asList(task.getScript()).stream().forEach(line -> arguments.append(line).append(";"));
-			
-			container = container.cmd("-c",arguments.toString());
+
+			container = container.cmd("-c", arguments.toString());
 		}
 
 		final ContainerConfig containerConfig = container.build();
@@ -50,9 +56,11 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		final ContainerCreation creation = docker.createContainer(containerConfig);
 		String containerId = creation.id();
 
+		log.info("Starting container " + containerId + " for task " + task.getName());
 		docker.startContainer(containerId);
-
 		final ContainerExit exit = docker.waitContainer(containerId);
+
+		log.info("Container " + containerId + " finished with exit code " + exit.statusCode());
 
 		// TODO : Do some descent exception treatment
 		if (exit.statusCode() != 0) {
@@ -60,6 +68,8 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		} else {
 			result.markAsFinishedWithSuccess();
 		}
+
+		log.info("Collecting container logs for " + containerId);
 
 		String logs = docker.logs(containerId, LogsParam.stdout(), LogsParam.stderr()).readFully();
 
@@ -69,6 +79,10 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		}
 
 		result.setOutput(logs);
+
+		long timeFinished = System.currentTimeMillis();
+
+		log.info("Task " + task.getName() + " finished in " + (timeFinished - timeStart));
 
 		return result;
 	}
