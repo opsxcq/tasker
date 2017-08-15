@@ -27,6 +27,10 @@ public class TaskConfiguration {
 		return this.docker;
 	}
 
+	public DockerTask getDockerTaskByName(String name) {
+		return getDocker().stream().filter(task -> task.getName().equals(name)).findFirst().orElse(null);
+	}
+
 	@Override
 	public String toString() {
 		return "TaskerConfiguration [docker=" + docker + "]";

@@ -8,6 +8,8 @@ public class DockerTask extends Task {
 	private String entrypoint;
 	private String[] arguments;
 
+	private String[] script;
+
 	public String getImage() {
 		return image;
 	}
@@ -38,6 +40,14 @@ public class DockerTask extends Task {
 
 	public void setArguments(String[] arguments) {
 		this.arguments = arguments;
+	}
+
+	public String[] getScript() {
+		return script;
+	}
+
+	public void setScript(String[] script) {
+		this.script = script;
 	}
 
 }

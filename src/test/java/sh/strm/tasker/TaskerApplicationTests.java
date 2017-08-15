@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import sh.strm.tasker.runner.DockerTaskRunner;
 import sh.strm.tasker.runner.TaskExecutionResult;
+import sh.strm.tasker.task.DockerTask;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -42,8 +43,16 @@ public class TaskerApplicationTests {
 
 	@Test
 	public void testDockerRunContainer() throws Exception {
-		TaskExecutionResult result = dockerRunner.executeTask(conf.getDocker().get(0));
+		DockerTask task = conf.getDockerTaskByName("hello");
+		TaskExecutionResult result = dockerRunner.executeTask(task);
 		assertEquals("green bar", result.getOutput());
+	}
+
+	@Test
+	public void testDockerRunContainerScript() throws Exception {
+		DockerTask task = conf.getDockerTaskByName("helloScript");
+		TaskExecutionResult result = dockerRunner.executeTask(task);
+		assertEquals("green bar\ngreen barbar", result.getOutput());
 	}
 
 }

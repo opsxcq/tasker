@@ -2,7 +2,12 @@ tasks:
   docker:
     - name: hello
       image: debian:jessie
-      entrypoint: /bin/bash
+      entrypoint: /bin/sh
       arguments:
         - -c
         - echo green bar
+    - name: helloScript
+      image: debian:jessie
+      script:
+        - echo green bar
+        - echo green barbar
