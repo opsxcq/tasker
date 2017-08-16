@@ -42,4 +42,13 @@ public class DockerTaskRunnerTest {
 		TaskExecutionResult result = dockerRunner.executeTask(task);
 		assertEquals("green bar\ngreen barbar", result.getOutput());
 	}
+	
+	@Test
+	public void testDockerRunContainerScriptStrict() throws Exception {
+		DockerTask task = conf.getDockerTaskByName("helloScriptStrict");
+		assertTrue(task.isScriptStrict());
+		TaskExecutionResult result = dockerRunner.executeTask(task);
+		assertEquals("green bar", result.getOutput());
+	}	
+	
 }
