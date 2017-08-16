@@ -13,3 +13,9 @@ tasks:
       script:
         - echo green bar
         - echo green barbar
+    - name: helloScriptPipe
+      image: debian:jessie
+      script:
+        - echo green bar
+        - echo wrong | grep -v wrong
+        - echo green barbar
