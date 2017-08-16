@@ -46,7 +46,13 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 
 			// For every script line, create a monster script to pass to our shell
 			StringBuilder arguments = new StringBuilder();
-			Arrays.asList(task.getScript()).stream().forEach(line -> arguments.append(line).append(";"));
+			if (task.isScriptStrict()) {
+				Arrays.asList(task.getScript()).stream().forEach(line -> arguments.append(line).append("&&"));
+				// Remove the last && because it doesn't compile in BASH
+				arguments.setLength(arguments.length() - 2);
+			} else {
+				Arrays.asList(task.getScript()).stream().forEach(line -> arguments.append(line).append(";"));
+			}
 
 			container = container.cmd("-c", arguments.toString());
 		}

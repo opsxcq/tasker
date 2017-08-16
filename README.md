@@ -64,3 +64,28 @@ tasks:
 ```
 
 Both examples will produce the very same result.
+
+
+#### Script directive
+
+`script` directive is a facilitator to setting the `entrypoint` to `/bin/sh` and pass as arguments as a list of commands. It's syntax is just a list of commands like:
+
+```
+    - name: helloScriptStrict
+      image: debian:jessie
+      script:
+        - echo green bar
+        - echo green barbar
+```
+
+Commands will be executed sequentially, no matter the result. To enable the strict mode, where the next command will **only** be executed if the previous command was successful (exit status 0), you can use the `script-strict` property. For example
+
+```
+    - name: helloScriptStrict
+      image: debian:jessie
+      script-strict: true
+      script:
+        - echo green bar
+        - echo green barbar
+```
+

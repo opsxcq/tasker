@@ -8,6 +8,7 @@ public class DockerTask extends Task {
 	private String entrypoint;
 	private String[] arguments;
 
+	private boolean scriptStrict;
 	private String[] script;
 
 	public String getImage() {
@@ -50,4 +51,12 @@ public class DockerTask extends Task {
 		this.script = script;
 	}
 
+	public boolean isScriptStrict() {
+		return scriptStrict;
+	}
+
+	public void setScriptStrict(boolean scriptStrict) {
+		this.scriptStrict = scriptStrict;
+	}
+	
 }
