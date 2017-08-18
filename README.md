@@ -11,7 +11,8 @@ notifiers:
 schedules:
   - every: 5 minutes
     task: test
-  - cron
+  - cron: 00 11,16 * * *
+    task: test
 
 listeners:
 
@@ -28,9 +29,9 @@ tasks:
 
 # Configuration
 
-## Tasks
+# Tasks
 
-### Docker tasks
+## Docker tasks
 
 Configurations
 
@@ -66,7 +67,7 @@ tasks:
 Both examples will produce the very same result.
 
 
-#### Script directive
+### Script directive
 
 `script` directive is a facilitator to setting the `entrypoint` to `/bin/sh` and pass as arguments as a list of commands. It's syntax is just a list of commands like:
 
@@ -89,3 +90,22 @@ Commands will be executed sequentially, no matter the result. To enable the stri
         - echo green barbar
 ```
 
+# Scheduler
+
+Scheduler configuration is an important aspect in Tasker. The scheduler is responsible to what it's name suggests, **schedule** tasks to be executed. It is defined in `schedule` section of the configuration file. Example
+
+```
+schedule:
+  - every: 10 minutes
+    task: test
+  - cron: 00 11,16 * * *
+    task: test
+```
+
+`schedule` is an array of schedules. There are two ways to schedule an task. One is by giving it an interval using `every` property.
+
+ * Minute - Every minute inside **one hour** period. For example, `every: 10 minutes`, will result in 6 executions, at 00, 10, 20, 30, 40 and 50. Every minute scheduled task will start it's first execution at the first minute of the hour (00).
+ * Hour - Every hour inside **one day** period. For example, `every: 6 hours` will result in 4 executions, at 00, 06, 12 and 18. Every hour scheduled task will start it's execution at the very first hour of the day (00 - midnight).
+ * Weekday - Every weekday as in the list (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday). The task will be executed at the first minute of the first hour of the respective day.
+ 
+ `cron` is another way to set the expected trigger to your scheduled task. It obey the standard `unix` cron format.
