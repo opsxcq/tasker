@@ -15,8 +15,45 @@ public class ScheduleParser {
 
 		String cron = null;
 		// Singular words/cases
-		if (every.equals("minute")) {
+		if (every.equals("minute") || every.equals("1 minute") || every.equals("1 minutes")) {
 			cron = "* * * * *";
+		} else if (every.equals("hour") || every.equals("1 hour") || every.equals("1 hours")) {
+			cron = "0 * * * *";
+		}
+
+		// Weekday
+		else {
+			String split[] = every.split(" ");
+			if (split.length != 2) {
+				throw new IllegalArgumentException(expression + " isn't a valid every expression");
+			}
+
+			int amount = Integer.parseInt(split[0]);
+
+			String precision = split[1];
+
+			// X minutes/hours/days/weeks/months
+			if (precision.equals("minutes")) {
+				if (amount < 1 || amount > 59) {
+					throw new IllegalArgumentException(expression + " isn't a valid every expression");
+				}
+				cron = "*/" + amount + " * * * *";
+			} else if (precision.equals("hours")) {
+				if (amount < 1 || amount > 23) {
+					throw new IllegalArgumentException(expression + " isn't a valid every expression");
+				}
+				cron = "0 */" + amount + " * * *";
+			} else if (precision.equals("days")) {
+				if (amount < 1 || amount > 31) {
+					throw new IllegalArgumentException(expression + " isn't a valid every expression");
+				}
+				cron = "0 0 */" + amount + " * *";
+			} else if (precision.equals("months")) {
+				if (amount < 1 || amount > 59) {
+					throw new IllegalArgumentException(expression + " isn't a valid every expression");
+				}
+				cron = "0 0 0 */" + amount + " *";
+			}
 		}
 
 		if (cron == null) {
