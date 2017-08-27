@@ -7,7 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import sh.strm.tasker.integration.DockerTaskRunnerTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TaskerApplicationTests.class, DockerTaskRunnerTest.class })
+@SuiteClasses({ TaskerApplicationTests.class, DockerTaskRunnerTest.class, SchedulerTests.class })
 public class AllTests {
 
 }
