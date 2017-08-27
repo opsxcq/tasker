@@ -3,24 +3,13 @@ schedule:
   # Several one minute representations
   - every: 1 minutes
     task: hello
-    name: testEveryMinute01
+    name: testEveryMinute
 
-  - every: 1 minutes
+  # Several one minute representations
+  - every: hour
     task: hello
+    name: testEveryHour
 
-  - every: minute
-    task: hello
-
-  # Some other minutes representation
-  - every: 10 minutes
-    task: hello
-
-  - every: 15 minutes
-    task: hello
-
-  # Hourly representation
-  - every: 6 hours
-    task: hello
 
  
   # Run two times, at 11 and 16
