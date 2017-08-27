@@ -2,6 +2,7 @@ package sh.strm.tasker.runner;
 
 import java.util.Arrays;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import com.spotify.docker.client.DefaultDockerClient;

@@ -1,5 +1,32 @@
 schedule:
-  
+
+  # Several one minute representations
+  - every: 1 minutes
+    task: hello
+    name: testEveryMinute01
+
+  - every: 1 minutes
+    task: hello
+
+  - every: minute
+    task: hello
+
+  # Some other minutes representation
+  - every: 10 minutes
+    task: hello
+
+  - every: 15 minutes
+    task: hello
+
+  # Hourly representation
+  - every: 6 hours
+    task: hello
+
+ 
+  # Run two times, at 11 and 16
+  - cron: 00 11,16 * * *
+    task: hello
+    
 tasks:
   docker:
     - name: hello
