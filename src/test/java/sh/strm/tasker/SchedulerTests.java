@@ -23,6 +23,37 @@ public class SchedulerTests {
 		assertNotNull(conf);
 	}
 
+	@Test
+	public void everyMinuteNotANumber() {
+		try {
+			ScheduleParser.expressionToCron("two minutes");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK, this is expected, go on
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void everyMinuteDecimal() {
+		try {
+			ScheduleParser.expressionToCron("1.2 minutes");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK, this is expected, go on
+		}
+	}
+	
+	@Test
+	public void everyMinuteNegativeNumber() {
+		try {
+			ScheduleParser.expressionToCron("-10 minutes");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK, this is expected, go on
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 
 	@Test
@@ -140,7 +171,7 @@ public class SchedulerTests {
 			// OK, this is expected, go on
 		}
 	}
-	
+
 	@Test
 	public void everyParserHourErrorTooMuchToken() throws Exception {
 		try {
@@ -214,7 +245,7 @@ public class SchedulerTests {
 			// OK, this is expected, go on
 		}
 	}
-	
+
 	@Test
 	public void everyParserDayErrorTooMuchToken() throws Exception {
 		try {
@@ -239,6 +270,80 @@ public class SchedulerTests {
 	public void everyParserDayErrorRangeHigher() throws Exception {
 		try {
 			ScheduleParser.expressionToCron("32 days");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK, this is expected, go on
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void everyMonthSimple() {
+		Schedule schedule = conf.getScheduleByName("testEveryMonth");
+		assertEquals("month", schedule.getEvery());
+		assertEquals("0 0 1 * *", ScheduleParser.expressionToCron(schedule.getEvery()));
+	}
+
+	@Test
+	public void everyParserEveryMonthSingular() throws Exception {
+		assertEquals("0 0 1 * *", ScheduleParser.expressionToCron("month"));
+	}
+
+	@Test
+	public void everyParserEveryMonthSingularNumeric() throws Exception {
+		assertEquals("0 0 1 * *", ScheduleParser.expressionToCron("1 month"));
+	}
+
+	@Test
+	public void everyParserEveryMonthsNumeric() throws Exception {
+		assertEquals("0 0 1 * *", ScheduleParser.expressionToCron("1 months"));
+	}
+
+	@Test
+	public void everyParserEverySixMonthsNumeric() throws Exception {
+		assertEquals("0 0 1 */6 *", ScheduleParser.expressionToCron("6 months"));
+	}
+
+	@Test
+	public void everyParserEverySixMonthNumericCase() throws Exception {
+		assertEquals("0 0 1 */6 *", ScheduleParser.expressionToCron("6 Months"));
+	}
+
+	@Test
+	public void everyParserMonthError() throws Exception {
+		try {
+			ScheduleParser.expressionToCron("6 Months");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK, this is expected, go on
+		}
+	}
+
+	@Test
+	public void everyParserMonthErrorTooMuchToken() throws Exception {
+		try {
+			ScheduleParser.expressionToCron("2 2 months");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK, this is expected, go on
+		}
+	}
+
+	@Test
+	public void everyParserMonthErrorRangeLower() throws Exception {
+		try {
+			ScheduleParser.expressionToCron("0 months");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK, this is expected, go on
+		}
+	}
+
+	@Test
+	public void everyParserMonthErrorRangeHigher() throws Exception {
+		try {
+			ScheduleParser.expressionToCron("12 months");
 			fail();
 		} catch (IllegalArgumentException e) {
 			// OK, this is expected, go on
