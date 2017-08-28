@@ -1,14 +1,16 @@
 schedule:
 
-  # Several one minute representations
   - every: 1 minutes
     task: hello
     name: testEveryMinute
 
-  # Several one minute representations
   - every: hour
     task: hello
     name: testEveryHour
+
+  - every: 1 day
+    task: hello
+    name: testEveryDay
 
 
  

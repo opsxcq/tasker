@@ -19,6 +19,10 @@ public class ScheduleParser {
 			cron = "* * * * *";
 		} else if (every.equals("hour") || every.equals("1 hour") || every.equals("1 hours")) {
 			cron = "0 * * * *";
+		} else if (every.equals("day") || every.equals("1 day") || every.equals("1 days")) {
+			cron = "0 0 * * *";
+		} else if (every.equals("month") || every.equals("1 month") || every.equals("1 months")) {
+			cron = "0 0 0 * *";
 		}
 
 		// Weekday
