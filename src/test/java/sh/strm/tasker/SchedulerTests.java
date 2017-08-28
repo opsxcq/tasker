@@ -349,4 +349,11 @@ public class SchedulerTests {
 		}
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void everyYear() throws Exception {
+		assertEquals("0 0 1 1 *", ScheduleParser.expressionToCron("year"));
+	}
+	
 }
