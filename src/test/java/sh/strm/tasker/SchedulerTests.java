@@ -30,7 +30,6 @@ public class SchedulerTests {
 			fail();
 		} catch (IllegalArgumentException e) {
 			// OK, this is expected, go on
-			e.printStackTrace();
 		}
 	}
 
@@ -313,7 +312,7 @@ public class SchedulerTests {
 	@Test
 	public void everyParserMonthError() throws Exception {
 		try {
-			ScheduleParser.expressionToCron("6 Months");
+			ScheduleParser.expressionToCron("6 Monthz");
 			fail();
 		} catch (IllegalArgumentException e) {
 			// OK, this is expected, go on

@@ -27,7 +27,7 @@ public class ScheduleParser {
 		} else if (every.equals("day") || every.equals("1 day") || every.equals("1 days")) {
 			cron = "0 0 * * *";
 		} else if (every.equals("month") || every.equals("1 month") || every.equals("1 months")) {
-			cron = "0 0 0 * *";
+			cron = "0 0 1 * *";
 		}
 
 		// Weekday
@@ -58,10 +58,10 @@ public class ScheduleParser {
 				}
 				cron = "0 0 */" + amount + " * *";
 			} else if (precision.equals("months")) {
-				if (amount < 1 || amount > 59) {
+				if (amount < 1 || amount > 11) {
 					throw new IllegalArgumentException(expression + " isn't a valid every expression");
 				}
-				cron = "0 0 0 */" + amount + " *";
+				cron = "0 0 1 */" + amount + " *";
 			}
 		}
 
