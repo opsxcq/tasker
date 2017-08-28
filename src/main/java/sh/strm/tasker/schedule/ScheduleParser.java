@@ -8,6 +8,11 @@ public class ScheduleParser {
 	 * @param expression
 	 *            an Every time format expression
 	 * @return a converted Cron compatible expression
+	 * 
+	 * @throws IllegalArgumentException
+	 *             when the expression parameter isn't correctly. Or
+	 *             {@link NumberFormatException} when the number isn't in the
+	 *             correct {@link Integer} format
 	 */
 	public static String expressionToCron(String expression) {
 		// normalization

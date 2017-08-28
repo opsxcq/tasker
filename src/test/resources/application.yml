@@ -11,6 +11,10 @@ schedule:
   - every: 1 day
     task: hello
     name: testEveryDay
+    
+  - every: month
+    task: hello
+    name: testEveryMonth
 
 
  
