@@ -1,5 +1,27 @@
 schedule:
-  
+
+  - every: 1 minutes
+    task: hello
+    name: testEveryMinute
+
+  - every: hour
+    task: hello
+    name: testEveryHour
+
+  - every: 1 day
+    task: hello
+    name: testEveryDay
+    
+  - every: month
+    task: hello
+    name: testEveryMonth
+
+
+ 
+  # Run two times, at 11 and 16
+  - cron: 00 11,16 * * *
+    task: hello
+    
 tasks:
   docker:
     - name: hello

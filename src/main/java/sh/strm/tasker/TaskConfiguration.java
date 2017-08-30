@@ -33,7 +33,7 @@ public class TaskConfiguration {
 
 	@Override
 	public String toString() {
-		return "TaskerConfiguration [docker=" + docker + "]";
+		return "TaskConfiguration [docker=" + docker + "]";
 	}
 
 }
