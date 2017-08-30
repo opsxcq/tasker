@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import sh.strm.tasker.schedule.Schedule;
+import sh.strm.tasker.schedule.ScheduleConfiguration;
 import sh.strm.tasker.schedule.ScheduleParser;
 
 @RunWith(SpringRunner.class)

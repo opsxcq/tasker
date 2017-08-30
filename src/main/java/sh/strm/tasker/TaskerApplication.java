@@ -17,4 +17,5 @@ public class TaskerApplication {
 	public DockerTaskRunner getDefaultDockerClient() throws Exception {
 		return new DockerTaskRunner();
 	}
+
 }
