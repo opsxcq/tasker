@@ -32,7 +32,7 @@ public class ScheduleParser {
 			cron = "0 0 1 1 *";
 		}
 
-		// Weekday
+		// TODO: Weekday
 		else {
 			String split[] = every.split(" ");
 			if (split.length != 2) {
