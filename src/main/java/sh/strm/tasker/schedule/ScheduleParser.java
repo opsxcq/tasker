@@ -28,6 +28,8 @@ public class ScheduleParser {
 			cron = "0 0 * * *";
 		} else if (every.equals("month") || every.equals("1 month") || every.equals("1 months")) {
 			cron = "0 0 1 * *";
+		} else if (every.equals("year")) {
+			cron = "0 0 1 1 *";
 		}
 
 		// Weekday
