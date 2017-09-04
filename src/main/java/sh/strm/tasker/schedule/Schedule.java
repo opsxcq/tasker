@@ -1,5 +1,7 @@
 package sh.strm.tasker.schedule;
 
+import sh.strm.tasker.task.DockerTask;
+
 public class Schedule {
 
 	private String name;
@@ -7,6 +9,8 @@ public class Schedule {
 	private String every;
 	private String cron;
 	private String task;
+
+	private DockerTask realTask;
 
 	public Schedule() {
 		this.name = "unamed";
@@ -18,11 +22,11 @@ public class Schedule {
 
 	public void setEvery(String every) {
 		this.every = every;
-		
-		if(every != null) {
+
+		if (every != null) {
 			// Convert `every` to a `cron` expression
 			this.cron = ScheduleParser.expressionToCron(every);
-		}else {
+		} else {
 			this.cron = null;
 		}
 	}
@@ -51,6 +55,14 @@ public class Schedule {
 		this.name = name;
 	}
 
+	public void setRealTask(DockerTask realTask) {
+		this.realTask = realTask;
+	}
+
+	public DockerTask getRealTask() {
+		return realTask;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -58,6 +70,7 @@ public class Schedule {
 		result = prime * result + ((cron == null) ? 0 : cron.hashCode());
 		result = prime * result + ((every == null) ? 0 : every.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((realTask == null) ? 0 : realTask.hashCode());
 		result = prime * result + ((task == null) ? 0 : task.hashCode());
 		return result;
 	}
@@ -86,6 +99,11 @@ public class Schedule {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (realTask == null) {
+			if (other.realTask != null)
+				return false;
+		} else if (!realTask.equals(other.realTask))
+			return false;
 		if (task == null) {
 			if (other.task != null)
 				return false;
@@ -96,7 +114,7 @@ public class Schedule {
 
 	@Override
 	public String toString() {
-		return "Schedule [name=" + name + ", every=" + every + ", cron=" + cron + ", task=" + task + "]";
+		return "Schedule [name=" + name + ", every=" + every + ", cron=" + cron + ", task=" + task + ", realTask=" + realTask + "]";
 	}
 
 }
