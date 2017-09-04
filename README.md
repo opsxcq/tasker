@@ -1,5 +1,8 @@
 # Tasker, a task runner
 
+[![build status](http://git.thestorm.com.br:8080/strm/tasker/badges/master/build.svg)](http://git.thestorm.com.br:8080/strm/tasker/commits/master)
+[![coverage report](http://git.thestorm.com.br:8080/strm/tasker/badges/master/coverage.svg)](http://git.thestorm.com.br:8080/strm/tasker/commits/master)
+
 # Config file spec
 
 ```
