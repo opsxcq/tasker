@@ -19,7 +19,7 @@ schedule:
 
  
   # Run two times, at 11 and 16
-  - cron: 00 11,16 * * *
+  - cron: 00 00 11,16 * * *
     task: hello
     
 tasks:
