@@ -3,11 +3,14 @@ package sh.strm.tasker.schedule;
 public class ScheduleParser {
 
 	/**
-	 * Convert an `every` expression into its respective cron expression
+	 * Convert an `every` expression into its respective cron expression. Due to
+	 * some different implementation on spring Cron, where it adds another field
+	 * (Seconds) as the first field, this implementation isn't compatible with
+	 * UNIX Cron standards.
 	 * 
 	 * @param expression
 	 *            an Every time format expression
-	 * @return a converted Cron compatible expression
+	 * @return a converted Cron (Spring) compatible expression
 	 * 
 	 * @throws IllegalArgumentException
 	 *             when the expression parameter isn't correctly. Or
@@ -21,15 +24,15 @@ public class ScheduleParser {
 		String cron = null;
 		// Singular words/cases
 		if (every.equals("minute") || every.equals("1 minute") || every.equals("1 minutes")) {
-			cron = "* * * * *";
+			cron = "0 * * * * *";
 		} else if (every.equals("hour") || every.equals("1 hour") || every.equals("1 hours")) {
-			cron = "0 * * * *";
+			cron = "0 0 * * * *";
 		} else if (every.equals("day") || every.equals("1 day") || every.equals("1 days")) {
-			cron = "0 0 * * *";
+			cron = "0 0 0 * * *";
 		} else if (every.equals("month") || every.equals("1 month") || every.equals("1 months")) {
-			cron = "0 0 1 * *";
+			cron = "0 0 0 1 * *";
 		} else if (every.equals("year")) {
-			cron = "0 0 1 1 *";
+			cron = "0 0 0 1 1 *";
 		}
 
 		// TODO: Weekday
@@ -48,22 +51,22 @@ public class ScheduleParser {
 				if (amount < 1 || amount > 59) {
 					throw new IllegalArgumentException(expression + " isn't a valid every expression");
 				}
-				cron = "*/" + amount + " * * * *";
+				cron = "0 */" + amount + " * * * *";
 			} else if (precision.equals("hours")) {
 				if (amount < 1 || amount > 23) {
 					throw new IllegalArgumentException(expression + " isn't a valid every expression");
 				}
-				cron = "0 */" + amount + " * * *";
+				cron = "0 0 */" + amount + " * * *";
 			} else if (precision.equals("days")) {
 				if (amount < 1 || amount > 31) {
 					throw new IllegalArgumentException(expression + " isn't a valid every expression");
 				}
-				cron = "0 0 */" + amount + " * *";
+				cron = "0 0 0 */" + amount + " * *";
 			} else if (precision.equals("months")) {
 				if (amount < 1 || amount > 11) {
 					throw new IllegalArgumentException(expression + " isn't a valid every expression");
 				}
-				cron = "0 0 1 */" + amount + " *";
+				cron = "0 0 0 1 */" + amount + " *";
 			}
 		}
 
