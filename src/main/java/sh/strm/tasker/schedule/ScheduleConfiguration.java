@@ -1,6 +1,6 @@
 package sh.strm.tasker.schedule;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,9 +16,9 @@ public class ScheduleConfiguration {
 
 	public List<Schedule> getSchedule() {
 		if(this.schedule == null) {
-			return Collections.emptyList();
+			this.schedule = new ArrayList<Schedule>();
 		}
-		return Collections.unmodifiableList(this.schedule);
+		return this.schedule;
 	}
 
 	public void setSchedule(List<Schedule> schedule) {
