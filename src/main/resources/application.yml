@@ -1,5 +1,8 @@
+logging:
+  level:
+    ROOT: DEBUG
+    
 schedule:
-
   - every: 1 minutes
     task: hello
     name: testEveryMinute
