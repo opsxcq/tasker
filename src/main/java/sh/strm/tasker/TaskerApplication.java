@@ -3,6 +3,8 @@ package sh.strm.tasker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 import sh.strm.tasker.runner.DockerTaskRunner;
 
@@ -14,7 +16,13 @@ public class TaskerApplication {
 	}
 
 	@Bean
+	public TaskScheduler taskScheduler() {
+		return new ConcurrentTaskScheduler();
+	}
+
+	@Bean
 	public DockerTaskRunner getDefaultDockerClient() throws Exception {
 		return new DockerTaskRunner();
 	}
+
 }
