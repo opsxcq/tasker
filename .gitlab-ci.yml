@@ -11,6 +11,9 @@ cache:
     # keep cache across branch
     key: "$CI_BUILD_REF_NAME"
 
+services:
+    - docker:dind
+
 stages:
     - build
     - test
