@@ -38,6 +38,7 @@ test-backend:
 package-docker:
     stage: package
     dependencies:
+        - build-backend
         - test-backend
     script:
         - ls -lh target/
