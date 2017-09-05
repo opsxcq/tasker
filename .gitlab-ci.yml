@@ -32,6 +32,7 @@ test-backend:
         - build-backend
     script:
         - "mvn test $MAVEN_CLI_OPTS"
+        - "cat target/site/jacoco/index.html"
     tags:
         - docker
 
