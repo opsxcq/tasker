@@ -1,0 +1,52 @@
+variables:
+    PUBLIC_TAG: 'strm/tasker'
+    DOCKER_DRIVER: overlay
+    SPRING_PROFILES_ACTIVE: gitlab-ci
+    MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=cache/m2/repository"
+    MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+
+cache:
+    paths:
+        - cache/m2/repository
+    # keep cache across branch
+    key: "$CI_BUILD_REF_NAME"
+
+stages:
+    - build
+    - test
+    - package
+
+build-backend:
+    stage: build
+    script:
+        - "mvn clean compile package -Dmaven.test.skip=true $MAVEN_CLI_OPTS"
+    artifacts:
+        paths:
+            - target/tasker-0.0.1-SNAPSHOT.jar
+    tags:
+        - docker
+
+test-backend:
+    stage: test
+    dependencies:
+        - build-backend
+    script:
+        - "mvn test $MAVEN_CLI_OPTS"
+        - "cat target/site/jacoco/index.html"
+    tags:
+        - docker
+
+package-docker:
+    stage: package
+    dependencies:
+        - build-backend
+        - test-backend
+    script:
+        - ls -lh target/
+        - export IMAGE_TAG=$(echo -en $CI_BUILD_REF_NAME | tr -c '[:alnum:]_.-' '-' | sed 's/master/latest/g')
+        - docker login -u "gitlab-ci-token" -p "$CI_BUILD_TOKEN" $CI_REGISTRY
+        - docker build --pull -t "$CI_REGISTRY_IMAGE:$IMAGE_TAG" .
+        - docker push "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
+        - docker tag "$CI_REGISTRY_IMAGE:$IMAGE_TAG" "$PUBLIC_TAG"
+    tags:
+        - docker
