@@ -11,30 +11,29 @@ cache:
     # keep cache across branch
     key: "$CI_BUILD_REF_NAME"
 
-services:
-    - docker:dind
-
 stages:
     - build
     - test
     - package
 
 build-backend:
-    image: maven:3-jdk-8
     stage: build
     script:
         - "mvn clean compile package -Dmaven.test.skip=true $MAVEN_CLI_OPTS"
     artifacts:
         paths:
             - target/tasker-0.0.1-SNAPSHOT.jar
+    tags:
+        - docker
 
 test-backend:
-    image: maven:3-jdk-8
     stage: test
     dependencies:
         - build-backend
     script:
         - "mvn test $MAVEN_CLI_OPTS"
+    tags:
+        - docker
 
 package-docker:
     stage: package
