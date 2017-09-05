@@ -2,12 +2,12 @@ variables:
     PUBLIC_TAG: 'strm/tasker'
     DOCKER_DRIVER: overlay
     SPRING_PROFILES_ACTIVE: gitlab-ci
-    MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=/cache/m2/repository"
+    MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=cache/m2/repository"
     MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
 
 cache:
     paths:
-        - /cache/m2/repository
+        - cache/m2/repository
     # keep cache across branch
     key: "$CI_BUILD_REF_NAME"
 
