@@ -2,7 +2,7 @@ FROM openjdk:8u111-jdk-alpine
 
 LABEL maintainer "opsxcq@strm.sh"
 
-ADD /target/tasker-0.0.1-SNAPSHOT.jar /tasker.jar
+ADD target/tasker-0.0.1-SNAPSHOT.jar /tasker.jar
 
 EXPOSE 8080
 
