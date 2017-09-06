@@ -13,4 +13,3 @@ tasks:
       image: debian:jessie
       script:
         - echo Hello world from Tasker
-        
