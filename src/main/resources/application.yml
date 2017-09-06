@@ -11,29 +11,6 @@ tasks:
   docker:
     - name: hello
       image: debian:jessie
-      entrypoint: /bin/sh
-      arguments:
-        - -c
-        - echo green bar
-        
-    - name: helloScript
-      image: debian:jessie
       script:
-        - echo green bar
-        - echo green barbar
-        
-    - name: helloScriptPipe
-      image: debian:jessie
-      script:
-        - echo green bar
-        - echo wrong | grep -v wrong
-        - echo green barbar
-        
-    - name: helloScriptStrict
-      image: debian:jessie
-      script-strict: true
-      script:
-        - echo green bar
-        - echo red bar | grep -q green
-        - echo greener bar
+        - echo Hello world from Tasker
         

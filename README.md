@@ -3,7 +3,11 @@
 [![build status](http://git.thestorm.com.br:8080/strm/tasker/badges/master/build.svg)](http://git.thestorm.com.br:8080/strm/tasker/commits/master)
 [![coverage report](http://git.thestorm.com.br:8080/strm/tasker/badges/master/coverage.svg)](http://git.thestorm.com.br:8080/strm/tasker/commits/master)
 
-# Config file spec
+Tasker is a task runner, plain and simple. Define tasks, schedule them, and that's it !
+
+# Configuration file specification
+
+
 
 ```
 
