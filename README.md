@@ -7,7 +7,7 @@ Tasker is a task runner, plain and simple. Define tasks, schedule them, and that
 
 # Configuration file specification
 
-
+Configuration is segmented, the concept is, you first configure your tasks, and then you configure what will activate them. Then just map your configuration file to `/application.yml` in the container, or if you run it outside docker, map it to a file called `application.yml` in the same folder that you are running the application from.
 
 ```
 
