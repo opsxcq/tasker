@@ -8,6 +8,6 @@ EXPOSE 8080
 
 VOLUME /data
 
-WORKDIR /data
+COPY main.sh /
 
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/tasker.jar"]
+ENTRYPOINT ["/main.sh]
