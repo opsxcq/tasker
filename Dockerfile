@@ -1,4 +1,4 @@
-FROM openjdk:8u111-jdk-alpine
+FROM java:8-jre
 
 LABEL maintainer "opsxcq@strm.sh"
 
