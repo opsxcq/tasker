@@ -9,7 +9,7 @@ else
   if [ ! -f '/application.yml' ]
   then
     echo '[-] Missing /application.yml , please, configure this application before running it'
-    exit -1
+    exit 1
   fi
 fi
 
