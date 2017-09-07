@@ -10,4 +10,4 @@ VOLUME /data
 
 COPY main.sh /
 
-ENTRYPOINT ["/main.sh]
+CMD ["/main.sh]
