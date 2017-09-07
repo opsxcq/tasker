@@ -4,5 +4,19 @@ services:
     tasker:
         image: strm/tasker
         volumes:
-            - "./src/main/resources/application.yml:/application.yml"
             - "/var/run/docker.sock:/var/run/docker.sock"
+        environment:
+             configuration: |
+                logging:
+                    level:
+                        sh.strm: DEBUG
+                schedule:
+                    - every: 1 minutes
+                      task: hello
+                      name: testEveryMinute
+                tasks:
+                    docker:
+                        - name: hello
+                          image: debian:jessie
+                          script:
+                              - echo Hello world from Tasker
