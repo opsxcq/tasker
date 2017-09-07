@@ -13,7 +13,4 @@ else
   fi
 fi
 
-echo "sleeping before anything"
-sleep 3000
-
 java -Djava.security.egd=file:/dev/./urandom -jar /tasker.jar
