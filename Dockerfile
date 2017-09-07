@@ -10,6 +10,6 @@ VOLUME /data
 
 COPY main.sh /
 
-ENTRYPOINT /bin/bash
+ENTRYPOINT ["/bin/bash"]
 
 CMD ["-c","/main.sh"]
