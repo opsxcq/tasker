@@ -5,6 +5,33 @@
 
 Tasker is a task runner, plain and simple. Define tasks, schedule them, and that's it !
 
+Give it a try ! Just create the following `docker-compose.yml` file
+
+```yml
+version: "2"
+
+services:
+    tasker:
+        image: strm/tasker
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        environment:
+             configuration: |
+                schedule:
+                    - every: 1 minutes
+                      task: hello
+                      name: testEveryMinute
+                tasks:
+                    docker:
+                        - name: hello
+                          image: debian:jessie
+                          script:
+                              - echo Hello world from Tasker
+```
+
+And that's it, now you have a task, running inside docker every minute, using the `debian:jessie` image (and bash inside this image), to run the script defined inside `script` element.
+
+
 # Configuration file specification
 
 Configuration is segmented, the concept is, you first configure your tasks, and then you configure what will activate them. Then just map your configuration file to `/application.yml` in the container, or if you run it outside docker, map it to a file called `application.yml` in the same folder that you are running the application from.
