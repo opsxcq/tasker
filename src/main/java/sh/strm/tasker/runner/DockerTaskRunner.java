@@ -90,6 +90,10 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 
 		log.info("Task " + task.getName() + " finished in " + (timeFinished - timeStart));
 
+		log.info("Removing finished container " + containerId);
+		// TODO: Create a property that would make possible to leave the container here
+		docker.removeContainer(containerId);
+
 		return result;
 	}
 
