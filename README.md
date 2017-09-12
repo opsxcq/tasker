@@ -65,14 +65,14 @@ tasks:
 
 # Tasks
 
-## Docker tasks
+# Docker tasks
 
 Configurations
 
  * `image` - the image in the very same format as it is expressed for docker, in `repo/image:tag` for images in the default repository, of `server/repo/image:tag` for images residing somewhere else.
  * `reuse` - Default is `false`, if set to `true`, the container will be created only once, and then, reused for every execution 
  
- #### Entrypoint and Arguments
+ ### Entrypoint and Arguments
  
 You can pass parameters to your task and set the entrypoint of the image as you pass in docker command line. Example:
 
@@ -101,7 +101,7 @@ tasks:
 Both examples will produce the very same result.
 
 
-### Script directive
+## Script directive
 
 `script` directive is a facilitator to setting the `entrypoint` to `/bin/sh` and pass as arguments as a list of commands. It's syntax is just a list of commands like:
 
@@ -142,4 +142,4 @@ schedule:
  * Hour - Every hour inside **one day** period. For example, `every: 6 hours` will result in 4 executions, at 00, 06, 12 and 18. Every hour scheduled task will start it's execution at the very first hour of the day (00 - midnight).
  * Weekday - Every weekday as in the list (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday). The task will be executed at the first minute of the first hour of the respective day.
  
- `cron` is another way to set the expected trigger to your scheduled task. It obey the standard `unix` cron format.
+ `cron` is another way to set the expected trigger to your scheduled task. It obey the standard `unix` cron format, but with the exception that it has one more field. Is a field representing `seconds`, and is the first field, from `00` to `59` are the accepted values. 
