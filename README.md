@@ -136,10 +136,17 @@ schedule:
     task: test
 ```
 
-`schedule` is an array of schedules. There are two ways to schedule an task. One is by giving it an interval using `every` property.
+`schedule` is an array of schedules. There are two ways to schedule an task. One is by giving it an interval using `every` property or `cron`
+
+
+## Every
+
+Every is a representation for a more simple understanding, like `every: minute`, is far more readable, but won't give you the same power as the `cron` directive. The `every` parameters can be:
 
  * Minute - Every minute inside **one hour** period. For example, `every: 10 minutes`, will result in 6 executions, at 00, 10, 20, 30, 40 and 50. Every minute scheduled task will start it's first execution at the first minute of the hour (00).
  * Hour - Every hour inside **one day** period. For example, `every: 6 hours` will result in 4 executions, at 00, 06, 12 and 18. Every hour scheduled task will start it's execution at the very first hour of the day (00 - midnight).
  * Weekday - Every weekday as in the list (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday). The task will be executed at the first minute of the first hour of the respective day.
+ 
+ ## Cron
  
  `cron` is another way to set the expected trigger to your scheduled task. It obey the standard `unix` cron format, but with the exception that it has one more field. Is a field representing `seconds`, and is the first field, from `00` to `59` are the accepted values. 
