@@ -131,6 +131,11 @@ Commands will be executed sequentially, no matter the result. To enable the stri
         - echo This second line will only be executed if the above command properly runs
 ```
 
+## Other considerations
+
+ * Tasker can run in a swarm or single instance
+ * `secrets` aren't available at the moment
+
 # Scheduler
 
 Scheduler configuration is an important aspect in Tasker. The scheduler is responsible to what it's name suggests, **schedule** tasks to be executed. It is defined in `schedule` section of the configuration file. Example
@@ -157,3 +162,9 @@ Every is a representation for a more simple understanding, like `every: minute`,
 ## Cron
  
  `cron` is another way to set the expected trigger to your scheduled task. It obey the standard `unix` cron format, but with the exception that it has one more field. Is a field representing `seconds`, and is the first field, from `00` to `59` are the accepted values. 
+ 
+ # `config` aka Configuration of the Configuration section
+ 
+ Configuration is the place where additional components of Tasker can be configured.
+ 
+  * `global-environment` - A list of environment variables that will be assigned to all tasks. Note that this variables are overwritten by `environment` variables section of each task in case of a conflit.

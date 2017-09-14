@@ -1,3 +1,7 @@
+config:
+  global-environment:
+    - GLOBAL=green bar
+
 schedule:
 
   - every: 1 minutes
@@ -58,6 +62,10 @@ tasks:
         - echo $BAR
       environment:
         - BAR=green bar 
+    - name: helloEnvironmentVariablesGlobal
+      image: debian:jessie
+      script:
+        - echo $GLOBAL
         
     - name: helloWithVolume01
       image: debian:jessie
@@ -72,3 +80,4 @@ tasks:
         - cat /mappedVolume/file
       volumes:
         - testVolume:/mappedVolume 
+        

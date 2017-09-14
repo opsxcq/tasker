@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import sh.strm.tasker.Configuration;
 import sh.strm.tasker.TaskConfiguration;
 import sh.strm.tasker.runner.DockerTaskRunner;
 import sh.strm.tasker.runner.TaskExecutionResult;
@@ -187,4 +188,45 @@ public class DockerTaskRunnerTest {
 		}
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void testDockerRunContainerEnvironmentVariablesGlobal() throws Exception {
+		DockerTask task = conf.getDockerTaskByName("helloEnvironmentVariablesGlobal");
+		TaskExecutionResult result = dockerRunner.executeTask(task);
+		assertEquals("green bar", result.getOutput());
+	}
+
+	@Test
+	public void testDockerEnvironmentParseVariablesGlobalError() throws Exception {
+		try {
+			Configuration configuration = new Configuration();
+			configuration.setGlobalEnvironment("ItWontWork");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerEnvironmentParseVariablesGlobalError2() throws Exception {
+		try {
+			Configuration configuration = new Configuration();
+			configuration.setGlobalEnvironment("ItWontWork:2");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerEnvironmentParseVariablesGlobalError3() throws Exception {
+		try {
+			Configuration configuration = new Configuration();
+			configuration.setGlobalEnvironment("ItWontWork=");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
 }
