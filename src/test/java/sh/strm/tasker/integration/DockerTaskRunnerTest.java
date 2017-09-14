@@ -86,6 +86,17 @@ public class DockerTaskRunnerTest {
 		}
 	}
 
+	@Test
+	public void testDockerEnvironmentParseVariablesError3() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setEnvironment("ItWontWork=");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////
 
 	@Test
@@ -124,6 +135,17 @@ public class DockerTaskRunnerTest {
 		try {
 			DockerTask task = new DockerTask();
 			task.setVolumes("ItWontWork=2");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerVolumeParseError3() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setVolumes("ItWontWork:");
 			fail();
 		} catch (IllegalArgumentException e) {
 			// OK
