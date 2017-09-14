@@ -1,6 +1,8 @@
 package sh.strm.tasker.integration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +37,27 @@ public class DockerTaskRunnerTest {
 		TaskExecutionResult result = dockerRunner.executeTask(task);
 		assertEquals("green bar\ngreen barbar", result.getOutput());
 	}
-	
+
 	@Test
 	public void testDockerRunContainerScriptPipe() throws Exception {
 		DockerTask task = conf.getDockerTaskByName("helloScriptPipe");
 		TaskExecutionResult result = dockerRunner.executeTask(task);
 		assertEquals("green bar\ngreen barbar", result.getOutput());
 	}
-	
+
 	@Test
 	public void testDockerRunContainerScriptStrict() throws Exception {
 		DockerTask task = conf.getDockerTaskByName("helloScriptStrict");
 		assertTrue(task.isScriptStrict());
 		TaskExecutionResult result = dockerRunner.executeTask(task);
 		assertEquals("green bar", result.getOutput());
-	}	
-	
+	}
+
+	@Test
+	public void testDockerRunContainerScriptEnvironmentVariables() throws Exception {
+		DockerTask task = conf.getDockerTaskByName("helloScriptEnvironmentVariables");
+		TaskExecutionResult result = dockerRunner.executeTask(task);
+		assertEquals("green bar", result.getOutput());
+	}
+
 }

@@ -3,10 +3,11 @@ package sh.strm.tasker.task;
 public class DockerTask extends Task {
 
 	private String image;
-	private String[] environment;
 
 	private String entrypoint;
 	private String[] arguments;
+
+	private String[] environment;
 
 	private boolean scriptStrict;
 	private String[] script;
@@ -17,14 +18,6 @@ public class DockerTask extends Task {
 
 	public void setImage(String image) {
 		this.image = image;
-	}
-
-	public String[] getEnvironment() {
-		return environment;
-	}
-
-	public void setEnvironment(String[] environment) {
-		this.environment = environment;
 	}
 
 	public String getEntrypoint() {
@@ -43,6 +36,14 @@ public class DockerTask extends Task {
 		this.arguments = arguments;
 	}
 
+	public String[] getEnvironment() {
+		return environment;
+	}
+
+	public void setEnvironment(String[] environment) {
+		this.environment = environment;
+	}
+
 	public String[] getScript() {
 		return script;
 	}
@@ -58,5 +59,5 @@ public class DockerTask extends Task {
 	public void setScriptStrict(boolean scriptStrict) {
 		this.scriptStrict = scriptStrict;
 	}
-	
+
 }

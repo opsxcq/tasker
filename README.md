@@ -57,12 +57,11 @@ tasks:
   docker:
     - name: backup
       image debian:jessie
+      script-strict: true
       script:
         - echo Backing up
-    - name: test
-      image: debian:jessie
-      reuse: true # Create a container and reuse it instead of creating a new one
-    
+      environment:
+        - TEST=environment variable value    
 ```
 
 # Tasks
@@ -75,6 +74,7 @@ Configurations
 
  * `image` - the image in the very same format as it is expressed for docker, in `repo/image:tag` for images in the default repository, of `server/repo/image:tag` for images residing somewhere else.
  * `reuse` - Default is `false`, if set to `true`, the container will be created only once, and then, reused for every execution 
+ * `environment` - Define environment varibales to be used in the task execution, they follow the same pattern that you use in `docker-compose.yml` file, a list of `variable=value`.
  
 ## Entrypoint and Arguments
  
