@@ -10,6 +10,7 @@ import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerConfig.Builder;
 import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
+import com.spotify.docker.client.messages.HostConfig;
 
 import sh.strm.tasker.task.DockerTask;
 
@@ -30,6 +31,7 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		TaskExecutionResult result = new TaskExecutionResult(task);
 
 		Builder container = ContainerConfig.builder().image(task.getImage());
+		com.spotify.docker.client.messages.HostConfig.Builder hostConfig = HostConfig.builder();
 
 		if (task.getEntrypoint() != null) {
 			container = container.entrypoint(task.getEntrypoint());
@@ -62,7 +64,15 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 			container.env(task.getEnvironment());
 		}
 
-		// Network mappings
+		// Volumes
+		if (task.getVolumes() != null) {
+			for (String volume : task.getVolumes()) {
+				if (volume != null) {
+					hostConfig = hostConfig.appendBinds(volume);
+				}
+			}
+		}
+		container.hostConfig(hostConfig.build());
 
 		final ContainerConfig containerConfig = container.build();
 
@@ -97,9 +107,10 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 
 		log.info("Task " + task.getName() + " finished in " + (timeFinished - timeStart));
 
-		log.info("Removing finished container " + containerId);
-		// TODO: Create a property that would make possible to leave the container here
-		docker.removeContainer(containerId);
+		if (!task.isKeepContainerAfterExecution()) {
+			log.info("Removing finished container " + containerId);
+			docker.removeContainer(containerId);
+		}
 
 		return result;
 	}
