@@ -62,6 +62,8 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 			container.env(task.getEnvironment());
 		}
 
+		// Network mappings
+
 		final ContainerConfig containerConfig = container.build();
 
 		final ContainerCreation creation = docker.createContainer(containerConfig);
