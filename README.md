@@ -35,8 +35,9 @@ And that's it, now you have a task, running inside docker every minute, using th
 
 Configuration is segmented, the concept is, you first configure your tasks, and then you configure what will activate them. Then just map your configuration file to `/application.yml` in the container, or if you run it outside docker, map it to a file called `application.yml` in the same folder that you are running the application from.
 
-```
+Here is an example with several constructions:
 
+```
 config:
 
 notifiers:
@@ -71,7 +72,6 @@ At this moment there is only one kind of task, `docker` tasks. Those tasks ran i
 Configurations
 
  * `image` - the image in the very same format as it is expressed for docker, in `repo/image:tag` for images in the default repository, of `server/repo/image:tag` for images residing somewhere else.
- * `reuse` - Default is `false`, if set to `true`, the container will be created only once, and then, reused for every execution 
  * `environment` - Define environment varibales to be used in the task execution, they follow the same pattern that you use in `docker-compose.yml` file, a list of `variable=value`.
  
 ## Entrypoint and Arguments
