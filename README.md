@@ -31,8 +31,7 @@ services:
 
 And that's it, now you have a task, running inside docker every minute, using the `debian:jessie` image (and bash inside this image), to run the script defined inside `script` element.
 
-
-# Configuration file specification
+# Configuration
 
 Configuration is segmented, the concept is, you first configure your tasks, and then you configure what will activate them. Then just map your configuration file to `/application.yml` in the container, or if you run it outside docker, map it to a file called `application.yml` in the same folder that you are running the application from.
 
@@ -45,6 +44,8 @@ notifiers:
 schedules:
   - every: 5 minutes
     task: test
+  - every: saturday
+    task: backup
   - cron: 00 11,16 * * *
     task: test
 
@@ -54,16 +55,19 @@ events:
 
 tasks:
   docker:
+    - name: backup
+      image debian:jessie
+      script:
+        - echo Backing up
     - name: test
       image: debian:jessie
-      
       reuse: true # Create a container and reuse it instead of creating a new one
     
 ```
 
-# Configuration
-
 # Tasks
+
+At this moment there is only one kind of task, `docker` tasks. Those tasks ran inside docker containers, plain and simple as that. More task executers will be implemented in a near future, watch this repository to be sure you get the updates !
 
 # Docker tasks
 
