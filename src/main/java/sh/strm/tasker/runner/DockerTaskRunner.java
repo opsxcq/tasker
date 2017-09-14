@@ -72,6 +72,8 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 				}
 			}
 		}
+
+		// Set host config
 		container.hostConfig(hostConfig.build());
 
 		final ContainerConfig containerConfig = container.build();
