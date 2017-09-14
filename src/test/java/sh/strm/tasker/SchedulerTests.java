@@ -359,4 +359,42 @@ public class SchedulerTests {
 		assertEquals("0 0 0 1 1 *", ScheduleParser.expressionToCron("year"));
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void everyWeekSunday() throws Exception {
+		assertEquals("0 0 0 * * SUN", ScheduleParser.expressionToCron("Sunday"));
+	}
+
+	@Test
+
+	public void everyWeekMonday() throws Exception {
+		assertEquals("0 0 0 * * MON", ScheduleParser.expressionToCron("Monday"));
+	}
+
+	@Test
+	public void everyWeekTuesday() throws Exception {
+		assertEquals("0 0 0 * * TUE", ScheduleParser.expressionToCron("Tuesday"));
+	}
+
+	@Test
+	public void everyWeekWednesday() throws Exception {
+		assertEquals("0 0 0 * * WED", ScheduleParser.expressionToCron("Wednesday"));
+	}
+
+	@Test
+	public void everyWeekThursday() throws Exception {
+		assertEquals("0 0 0 * * THU", ScheduleParser.expressionToCron("Thursday"));
+	}
+
+	@Test
+	public void everyWeekFriday() throws Exception {
+		assertEquals("0 0 0 * * FRI", ScheduleParser.expressionToCron("Friday"));
+	}
+
+	@Test
+	public void everyWeekSaturday() throws Exception {
+		assertEquals("0 0 0 * * SAT", ScheduleParser.expressionToCron("Saturday"));
+	}
+
 }
