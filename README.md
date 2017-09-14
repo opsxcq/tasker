@@ -139,7 +139,7 @@ schedule:
     task: test
 ```
 
-`schedule` is an array of schedules. There are two ways to schedule an task. One is by giving it an interval using `every` property or `cron`
+`schedule` is an array of schedules. There are two ways to schedule an task. One is by giving it an interval using `every` property or `cron`. You can name a schedule with the `name` attribute, but it isn't mandatory, you can have anonymous schedules if you prefer.
 
 
 ## Every
