@@ -73,6 +73,11 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 			}
 		}
 
+		// Port mappings
+		if (task.getPorts() != null) {
+			container.exposedPorts(task.getPorts());
+		}
+
 		// Set host config
 		container.hostConfig(hostConfig.build());
 

@@ -8,8 +8,8 @@ public class DockerTask extends Task {
 	private String[] arguments;
 
 	private String[] environment;
-
 	private String[] volumes;
+	private String[] ports;
 
 	private boolean scriptStrict;
 	private String[] script;
@@ -83,6 +83,27 @@ public class DockerTask extends Task {
 		}
 
 		this.volumes = volumes;
+	}
+
+	public String[] getPorts() {
+		return ports;
+	}
+
+	public void setPorts(String[] ports) {
+		if (ports != null) {
+			for (String port : ports) {
+				if (port != null) {
+					if (!port.contains(":")) {
+						throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping");
+					}
+					String split[] = port.split(":");
+					if (split.length != 2 || split[0] == null || split[0].length() == 0 || split[1] == null || split[1].length() == 0) {
+						throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping");
+					}
+				}
+			}
+		}
+		this.ports = ports;
 	}
 
 	public String[] getScript() {

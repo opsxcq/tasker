@@ -152,4 +152,39 @@ public class DockerTaskRunnerTest {
 		}
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void testDockerPortsParseError() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setVolumes("ItWontWork");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerPortseParseError2() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setVolumes("ItWontWork=2");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerPortsParseError3() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setVolumes("ItWontWork:");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
 }
