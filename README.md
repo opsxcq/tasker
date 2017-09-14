@@ -18,7 +18,7 @@ services:
         environment:
              configuration: |
                 schedule:
-                    - every: 1 minutes
+                    - every: minute
                       task: hello
                       name: testEveryMinute
                 tasks:
