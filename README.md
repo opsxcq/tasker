@@ -113,8 +113,7 @@ Both examples will produce the very same result.
     - name: helloScriptStrict
       image: debian:jessie
       script:
-        - echo green bar
-        - echo green barbar
+        - echo Hello from Docker
 ```
 
 Commands will be executed sequentially, no matter the result. To enable the strict mode, where the next command will **only** be executed if the previous command was successful (exit status 0), you can use the `script-strict` property. For example
@@ -124,8 +123,8 @@ Commands will be executed sequentially, no matter the result. To enable the stri
       image: debian:jessie
       script-strict: true
       script:
-        - echo green bar
-        - echo green barbar
+        - echo This is the first line
+        - echo This second line will only be executed if the above command properly runs
 ```
 
 # Scheduler
@@ -136,7 +135,7 @@ Scheduler configuration is an important aspect in Tasker. The scheduler is respo
 schedule:
   - every: 10 minutes
     task: test
-  - cron: 00 11,16 * * *
+  - cron: 00 00 11 * * *
     task: test
 ```
 
