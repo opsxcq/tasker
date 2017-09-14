@@ -34,8 +34,23 @@ public class ScheduleParser {
 		} else if (every.equals("year")) {
 			cron = "0 0 0 1 1 *";
 		}
-
-		// TODO: Weekday
+		// Weekdays
+		else if (every.equals("sunday")) {
+			cron = "0 0 0 0 0 SUN";
+		} else if (every.equals("monday")) {
+			cron = "0 0 0 0 0 MON";
+		} else if (every.equals("tuesday")) {
+			cron = "0 0 0 0 0 TUE";
+		} else if (every.equals("wednesday")) {
+			cron = "0 0 0 0 0 WED";
+		} else if (every.equals("thursday")) {
+			cron = "0 0 0 0 0 THU";
+		} else if (every.equals("friday")) {
+			cron = "0 0 0 0 0 FRI";
+		} else if (every.equals("saturday")) {
+			cron = "0 0 0 0 0 SAT";
+		}
+		// Other cases
 		else {
 			String split[] = every.split(" ");
 			if (split.length != 2) {
