@@ -2,6 +2,7 @@ package sh.strm.tasker.integration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +59,17 @@ public class DockerTaskRunnerTest {
 		DockerTask task = conf.getDockerTaskByName("helloScriptEnvironmentVariables");
 		TaskExecutionResult result = dockerRunner.executeTask(task);
 		assertEquals("green bar", result.getOutput());
+	}
+
+	@Test
+	public void testDockerRunContainerScriptEnvironmentVariablesError() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setEnvironment("ItWontWork");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
 	}
 
 }

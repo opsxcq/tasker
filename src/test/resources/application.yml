@@ -57,4 +57,4 @@ tasks:
       script:
         - echo $BAR
       environment:
-        - BAR=green bar        
+        - BAR=green bar    
