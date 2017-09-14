@@ -1,8 +1,11 @@
 package sh.strm.tasker.runner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient.LogsParam;
@@ -11,7 +14,9 @@ import com.spotify.docker.client.messages.ContainerConfig.Builder;
 import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
+import com.spotify.docker.client.messages.swarm.Swarm;
 
+import sh.strm.tasker.Configuration;
 import sh.strm.tasker.task.DockerTask;
 
 public class DockerTaskRunner extends Runner<DockerTask> {
@@ -20,8 +25,24 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 
 	private DefaultDockerClient docker;
 
+	@Autowired
+	private Configuration config;
+
+	private Swarm swarm;
+	private boolean isSwarm;
+
 	public DockerTaskRunner() throws Exception {
 		this.docker = DefaultDockerClient.fromEnv().build();
+		// Check swarm status
+
+		try {
+			this.swarm = this.docker.inspectSwarm();
+			if (this.swarm != null && this.swarm.id() != null) {
+				this.isSwarm = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public TaskExecutionResult executeTask(DockerTask task) throws Exception {
@@ -60,8 +81,18 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		}
 
 		// Environment variables
+		List<String> environment = new ArrayList<String>();
+
 		if (task.getEnvironment() != null) {
-			container.env(task.getEnvironment());
+			environment.addAll(Arrays.asList(task.getEnvironment()));
+		}
+
+		if (this.config.getGlobalEnvironment() != null) {
+			environment.addAll(Arrays.asList(this.config.getGlobalEnvironment()));
+		}
+
+		if (environment.size() > 0) {
+			container.env(environment);
 		}
 
 		// Volumes

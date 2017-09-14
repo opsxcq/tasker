@@ -1,4 +1,4 @@
-package sh.strm.tasker.schedule;
+package sh.strm.tasker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import sh.strm.tasker.schedule.Schedule;
 
 @Configuration
 @EnableConfigurationProperties

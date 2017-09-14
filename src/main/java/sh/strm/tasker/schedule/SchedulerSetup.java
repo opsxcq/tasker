@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
+import sh.strm.tasker.ScheduleConfiguration;
 import sh.strm.tasker.TaskConfiguration;
 import sh.strm.tasker.runner.DockerTaskRunner;
 import sh.strm.tasker.runner.TaskExecutionResult;
