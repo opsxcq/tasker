@@ -51,8 +51,6 @@ schedules:
 
 listeners:
 
-events:
-
 tasks:
   docker:
     - name: backup
