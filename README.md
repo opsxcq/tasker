@@ -77,6 +77,8 @@ Configurations
  * `environment` - Define environment varibales to be used in the task execution, they follow the same pattern that you use in `docker-compose.yml` file, a list of `variable=value`.
  * `keepContainerAfterExecution` - Keep container after it executes, won't delete it, *WARNING* it can leave a lot of trash.
  * `volumes` - An array, just like you map `volumes` in your `docker-compose.yml`.
+ * `ports` - An array, just like you map `ports` in your `docker-compose.yml`.
+ 
  
 ## Entrypoint and Arguments
  
