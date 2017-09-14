@@ -72,4 +72,15 @@ public class DockerTaskRunnerTest {
 		}
 	}
 
+	@Test
+	public void testDockerRunContainerScriptEnvironmentVariablesError2() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setEnvironment("ItWontWork:2");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
 }
