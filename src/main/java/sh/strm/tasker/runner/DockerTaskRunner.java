@@ -57,6 +57,11 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 			container = container.cmd("-c", arguments.toString());
 		}
 
+		// Environment variables
+		if (task.getEnvironment() != null) {
+			container.env(task.getEnvironment());
+		}
+
 		final ContainerConfig containerConfig = container.build();
 
 		final ContainerCreation creation = docker.createContainer(containerConfig);

@@ -52,3 +52,9 @@ tasks:
         - echo red bar | grep -q green
         - echo greener bar
         
+    - name: helloScriptEnvironmentVariables
+      image: debian:jessie
+      script:
+        - echo $BAR
+      environment:
+        - BAR=green bar        
