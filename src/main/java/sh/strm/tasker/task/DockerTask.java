@@ -9,8 +9,12 @@ public class DockerTask extends Task {
 
 	private String[] environment;
 
+	private String[] volumes;
+
 	private boolean scriptStrict;
 	private String[] script;
+
+	private boolean keepContainerAfterExecution;
 
 	public String getImage() {
 		return image;
@@ -59,6 +63,28 @@ public class DockerTask extends Task {
 		this.environment = environment;
 	}
 
+	public String[] getVolumes() {
+		return volumes;
+	}
+
+	public void setVolumes(String... volumes) {
+		if (volumes != null) {
+			for (String volume : volumes) {
+				if (volume != null) {
+					if (!volume.contains(":")) {
+						throw new IllegalArgumentException("Volumes must follow the 'volume1:volume2' format mapping");
+					}
+					String split[] = volume.split(":");
+					if (split.length != 2 || split[0] == null || split[0].length() == 0 || split[1] == null || split[1].length() == 0) {
+						throw new IllegalArgumentException("Volumes must follow the 'volume1:volume2' format mapping");
+					}
+				}
+			}
+		}
+
+		this.volumes = volumes;
+	}
+
 	public String[] getScript() {
 		return script;
 	}
@@ -73,6 +99,14 @@ public class DockerTask extends Task {
 
 	public void setScriptStrict(boolean scriptStrict) {
 		this.scriptStrict = scriptStrict;
+	}
+
+	public void setKeepContainerAfterExecution(boolean keepContainerAfterExecution) {
+		this.keepContainerAfterExecution = keepContainerAfterExecution;
+	}
+
+	public boolean isKeepContainerAfterExecution() {
+		return keepContainerAfterExecution;
 	}
 
 }

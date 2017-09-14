@@ -52,9 +52,23 @@ tasks:
         - echo red bar | grep -q green
         - echo greener bar
         
-    - name: helloScriptEnvironmentVariables
+    - name: helloEnvironmentVariables
       image: debian:jessie
       script:
         - echo $BAR
       environment:
-        - BAR=green bar    
+        - BAR=green bar 
+        
+    - name: helloWithVolume01
+      image: debian:jessie
+      script:
+        - echo $expected > /mappedVolume/file
+      volumes:
+        - testVolume:/mappedVolume
+
+    - name: helloWithVolume02
+      image: debian:jessie
+      script:
+        - cat /mappedVolume/file
+      volumes:
+        - testVolume:/mappedVolume 

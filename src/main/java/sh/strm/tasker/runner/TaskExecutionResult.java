@@ -11,7 +11,7 @@ public class TaskExecutionResult {
 
 	// Combination of stdout + stderr
 	private String output;
-	
+
 	private Task task;
 
 	// Internal controls
@@ -46,7 +46,7 @@ public class TaskExecutionResult {
 	public Task getTask() {
 		return task;
 	}
-	
+
 	public void markAsFinishedWithSuccess() {
 		this.markAsFinished(0);
 	}
@@ -54,6 +54,10 @@ public class TaskExecutionResult {
 	public void markAsFinished(int exitCode) {
 		this.finished = new Date();
 		this.exitCode = exitCode;
+	}
+
+	public boolean isSuccessful() {
+		return this.exitCode == 0;
 	}
 
 }
