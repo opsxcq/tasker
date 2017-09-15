@@ -46,7 +46,7 @@ schedules:
     task: test
   - every: saturday
     task: backup
-  - cron: 00 11,16 * * *
+  - cron: 0 0 13 * * *
     task: test
 
 tasks:
