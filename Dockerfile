@@ -2,7 +2,7 @@ FROM maven:3.5-jdk-8 as BUILD
 
 COPY src /usr/src/tasker/src
 COPY pom.xml /usr/src/tasker
-RUN mvn -f /usr/src/tasker/pom.xml clean package
+RUN mvn -f /usr/src/tasker/pom.xml clean package -DskipTests=true
 
 FROM java:8-jre
 
