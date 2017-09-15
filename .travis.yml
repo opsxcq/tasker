@@ -1,3 +1,4 @@
 language: java
+services: docker
 sudo: false
 script: mvn clean verify
