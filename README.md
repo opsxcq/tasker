@@ -128,9 +128,10 @@ Commands will be executed sequentially, no matter the result. To enable the stri
         - echo This second line will only be executed if the above command properly runs
 ```
 
-## Other considerations
+## Other considerations about docker tasks
 
- * Tasker can run in a swarm or single instance
+ * Tasker can run in a swarm or single instance, but it will schedule tasks to run in the current node.
+ * You can set `DOCKER_HOST` environment variable to this image, to make it run the scheduled tasks in a remote docker host.
  * `secrets` aren't available at the moment
 
 # Scheduler
