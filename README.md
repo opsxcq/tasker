@@ -38,8 +38,8 @@ Here is an example with several constructions:
 
 ```
 config:
-
-notifiers:
+    global-environment:
+        - http_proxy="http://yourproxy:8080"
 
 schedules:
   - every: 5 minutes
@@ -48,8 +48,6 @@ schedules:
     task: backup
   - cron: 00 11,16 * * *
     task: test
-
-listeners:
 
 tasks:
   docker:
