@@ -17,16 +17,15 @@ services:
             - "/var/run/docker.sock:/var/run/docker.sock"
         environment:
              configuration: |
-                schedule:
-                    - every: minute
-                      task: hello
-                      name: testEveryMinute
-                tasks:
-                    docker:
-                        - name: hello
-                          image: debian:jessie
-                          script:
-                              - echo Hello world from Tasker
+                 schedule:
+                      - every: minute
+                        task: hello
+                 tasks:
+                     docker:
+                         - name: hello
+                           image: debian:jessie
+                           script:
+                               - echo Hello world from Tasker
 ```
 
 And that's it, now you have a task, running inside docker every minute, using the `debian:jessie` image (and bash inside this image), to run the script defined inside `script` element.
