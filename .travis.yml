@@ -1,4 +1,9 @@
 language: java
 services: docker
 sudo: false
-script: mvn clean verify
+script:
+    - docker run --privileged --name dind -p 12375:2375 -d docker:stable
+    - sleep 10
+    - docker -H tcp://localhost:12375 version
+    - export DOCKER_HOST='tcp://localhost:12375'
+    - mvn clean verify
