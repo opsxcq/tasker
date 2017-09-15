@@ -62,10 +62,18 @@ tasks:
         - echo $BAR
       environment:
         - BAR=green bar 
+        
     - name: helloEnvironmentVariablesGlobal
       image: debian:jessie
       script:
         - echo $GLOBAL
+        
+    - name: helloEnvironmentVariablesGlobalOverride
+      image: debian:jessie
+      script:
+        - echo $GLOBAL
+      environment:
+        - GLOBAL=green is the bar
         
     - name: helloWithVolume01
       image: debian:jessie

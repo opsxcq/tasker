@@ -198,6 +198,13 @@ public class DockerTaskRunnerTest {
 	}
 
 	@Test
+	public void testDockerRunContainerEnvironmentVariablesGlobalOverride() throws Exception {
+		DockerTask task = conf.getDockerTaskByName("helloEnvironmentVariablesGlobalOverride");
+		TaskExecutionResult result = dockerRunner.executeTask(task);
+		assertEquals("green is the bar", result.getOutput());
+	}
+
+	@Test
 	public void testDockerEnvironmentParseVariablesGlobalError() throws Exception {
 		try {
 			Configuration configuration = new Configuration();
