@@ -1,5 +1,5 @@
 # Tasker, a task runner
-[![Build Status](https://img.shields.io/travis/opsxcq/opsxcq.svg)](https://travis-ci.org/opsxcq/tasker)
+[![Build Status](https://img.shields.io/travis/opsxcq/opsxcq.svg?style=plastic)](https://travis-ci.org/opsxcq/tasker)
 [![Docker Pulls](https://img.shields.io/docker/pulls/strm/tasker.svg?style=plastic)](https://hub.docker.com/r/strm/tasker/)
 
 Tasker is a task runner, plain and simple. Define tasks, schedule them, and that's it !
