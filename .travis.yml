@@ -2,7 +2,7 @@ language: java
 services: docker
 sudo: false
 script:
-    - docker run --privileged --name dind -p 12375:2375 -d docker:stable
+    - docker run --privileged --name dind -p 12375:2375 -d docker:dind
     - sleep 10
     - docker -H tcp://localhost:12375 version
     - export DOCKER_HOST='tcp://localhost:12375'
