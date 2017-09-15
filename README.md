@@ -44,7 +44,7 @@ config:
 schedules:
   - every: 5 minutes
     task: test
-  - every: saturday
+  - every: Saturday
     task: backup
   - cron: 0 0 13 * * *
     task: test
@@ -55,7 +55,7 @@ tasks:
       image debian:jessie
       script-strict: true
       script:
-        - echo Backing up
+        - echo Running the backup
       environment:
         - TEST=environment variable value    
       volumes:
