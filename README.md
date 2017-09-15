@@ -1,8 +1,6 @@
 # Tasker, a task runner
-
+[![Build Status](https://travis-ci.org/opsxcq/tasker.png?branch=master)](https://travis-ci.org/opsxcq/tasker)
 [![Docker Pulls](https://img.shields.io/docker/pulls/strm/tasker.svg?style=plastic)](https://hub.docker.com/r/strm/tasker/)
-[![build status](http://git.thestorm.com.br:8080/strm/tasker/badges/master/build.svg)](http://git.thestorm.com.br:8080/strm/tasker/commits/master)
-[![coverage report](http://git.thestorm.com.br:8080/strm/tasker/badges/master/coverage.svg)](http://git.thestorm.com.br:8080/strm/tasker/commits/master)
 
 Tasker is a task runner, plain and simple. Define tasks, schedule them, and that's it !
 
