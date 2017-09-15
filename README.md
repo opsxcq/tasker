@@ -163,7 +163,7 @@ Every is a representation for a more simple understanding, like `every: minute`,
  
  `cron` is another way to set the expected trigger to your scheduled task. It obey the standard `unix` cron format, but with the exception that it has one more field. Is a field representing `seconds`, and is the first field, from `00` to `59` are the accepted values. 
  
- # `config` aka Configuration of the Configuration section
+# `config` aka Configuration of the Configuration section
  
  Configuration is the place where additional components of Tasker can be configured.
  
