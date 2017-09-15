@@ -15,6 +15,7 @@ public class DockerTask extends Task {
 	private String[] script;
 
 	private boolean keepContainerAfterExecution;
+	private boolean alwaysPull;
 
 	public String getImage() {
 		return image;
@@ -128,6 +129,14 @@ public class DockerTask extends Task {
 
 	public boolean isKeepContainerAfterExecution() {
 		return keepContainerAfterExecution;
+	}
+
+	public boolean isAlwaysPull() {
+		return alwaysPull;
+	}
+
+	public void setAlwaysPull(boolean alwaysPull) {
+		this.alwaysPull = alwaysPull;
 	}
 
 }
