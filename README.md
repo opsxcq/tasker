@@ -18,8 +18,8 @@ services:
         environment:
              configuration: |
                  schedule:
-                      - every: minute
-                        task: hello
+                     - every: minute
+                       task: hello
                  tasks:
                      docker:
                          - name: hello
