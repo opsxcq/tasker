@@ -83,12 +83,12 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		// Environment variables
 		List<String> environment = new ArrayList<String>();
 
-		if (task.getEnvironment() != null) {
-			environment.addAll(Arrays.asList(task.getEnvironment()));
-		}
-
 		if (this.config.getGlobalEnvironment() != null) {
 			environment.addAll(Arrays.asList(this.config.getGlobalEnvironment()));
+		}
+
+		if (task.getEnvironment() != null) {
+			environment.addAll(Arrays.asList(task.getEnvironment()));
 		}
 
 		if (environment.size() > 0) {
