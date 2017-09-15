@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient.LogsParam;
+import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerConfig.Builder;
 import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
+import com.spotify.docker.client.messages.Image;
 import com.spotify.docker.client.messages.swarm.Swarm;
 
 import sh.strm.tasker.Configuration;
@@ -41,8 +43,33 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 				this.isSwarm = true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			// OK, It will show that this node isn't a docker swarm node or manager
 		}
+	}
+
+	private boolean hasImage(String imageName) throws DockerException, InterruptedException {
+		List<Image> images = this.docker.listImages();
+		for (Image image : images) {
+			for (String tag : image.repoTags()) {
+				if (imageName.equals(tag)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private void pullImage(String image) throws DockerException, InterruptedException {
+		log.info("Pulling image " + image);
+		this.docker.pull(image, (message) -> {
+			if (message.progressDetail() != null) {
+				Long current = message.progressDetail().current();
+				Long total = message.progressDetail().total();
+				log.info("Pulling image " + image + " " + current + " / " + total);
+			} else {
+				log.info(message);
+			}
+		});
 	}
 
 	public TaskExecutionResult executeTask(DockerTask task) throws Exception {
@@ -50,6 +77,10 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		log.info("Starting the execution of the " + task.getName() + " task");
 
 		TaskExecutionResult result = new TaskExecutionResult(task);
+
+		if (!hasImage(task.getImage()) || task.isAlwaysPull()) {
+			pullImage(task.getImage());
+		}
 
 		Builder container = ContainerConfig.builder().image(task.getImage());
 		com.spotify.docker.client.messages.HostConfig.Builder hostConfig = HostConfig.builder();

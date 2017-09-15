@@ -1,3 +1,10 @@
+logging:
+  level:
+    org.springframework.web: WARN
+    org.springframework.test: WARN
+    guru.springframework.controllers: WARN
+    org.hibernate: WARN
+
 config:
   global-environment:
     - GLOBAL=green bar
@@ -88,4 +95,9 @@ tasks:
         - cat /mappedVolume/file
       volumes:
         - testVolume:/mappedVolume 
-        
+
+    - name: helloAlwaysPull
+      image: debian:jessie
+      always-pull: true
+      script:
+        - echo green bar

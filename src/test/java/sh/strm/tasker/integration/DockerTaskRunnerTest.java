@@ -28,6 +28,14 @@ public class DockerTaskRunnerTest {
 	private DockerTaskRunner dockerRunner;
 
 	@Test
+	public void testDockerRunContainerAlwaysPull() throws Exception {
+		DockerTask task = conf.getDockerTaskByName("helloAlwaysPull");
+		TaskExecutionResult result = dockerRunner.executeTask(task);
+		assertTrue(task.isAlwaysPull());
+		assertEquals("green bar", result.getOutput());
+	}
+
+	@Test
 	public void testDockerRunContainer() throws Exception {
 		DockerTask task = conf.getDockerTaskByName("hello");
 		TaskExecutionResult result = dockerRunner.executeTask(task);

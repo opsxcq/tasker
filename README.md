@@ -74,6 +74,7 @@ Configurations
  * `keepContainerAfterExecution` - Keep container after it executes, won't delete it, *WARNING* it can leave a lot of trash.
  * `volumes` - An array, just like you map `volumes` in your `docker-compose.yml`.
  * `ports` - An array, just like you map `ports` in your `docker-compose.yml`.
+ * `always-pull` - A boolean (true/false) property, when it's true, Tasker will pull a newer image version updating it if there is a newer one available.
  
  
 ## Entrypoint and Arguments
@@ -127,12 +128,16 @@ Commands will be executed sequentially, no matter the result. To enable the stri
         - echo This second line will only be executed if the above command properly runs
 ```
 
+## Docker images and pulls
+
+Tasker uses the concept of lazy loading, in other words, it will pull your image when it will run at the very first time. You can use `always-pull=true` in your docker task definition if you want to keep updating the local image everytime your task runs.
+
 ## Other considerations about docker tasks
 
  * Tasker can run in a swarm or single instance, but it will schedule tasks to run in the current node.
  * You can set `DOCKER_HOST` environment variable to this image, to make it run the scheduled tasks in a remote docker host.
  * `secrets` aren't available at the moment
-
+ 
 # Scheduler
 
 Scheduler configuration is an important aspect in Tasker. The scheduler is responsible to what it's name suggests, **schedule** tasks to be executed. It is defined in `schedule` section of the configuration file. Example
