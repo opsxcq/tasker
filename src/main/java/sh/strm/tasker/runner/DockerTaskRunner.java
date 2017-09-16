@@ -50,9 +50,11 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 	private boolean hasImage(String imageName) throws DockerException, InterruptedException {
 		List<Image> images = this.docker.listImages();
 		for (Image image : images) {
-			for (String tag : image.repoTags()) {
-				if (imageName.equals(tag)) {
-					return true;
+			if (image.repoTags() != null) {
+				for (String tag : image.repoTags()) {
+					if (imageName.equals(tag)) {
+						return true;
+					}
 				}
 			}
 		}
