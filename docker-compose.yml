@@ -15,9 +15,21 @@ services:
                 schedule:
                     - every: minute
                       task: hello
+                    - every: minute
+                      task: helloFromPython
+                    - every: minute
+                      task: helloFromNode
                 tasks:
                     docker:
                         - name: hello
                           image: debian:jessie
                           script:
                               - echo Hello world from Tasker
+                        - name: helloFromPython
+                          image: python:3-slim
+                          script:
+                              - python -c 'print("Hello world from python")'
+                        - name: helloFromNode
+                          image: node:8
+                          script:
+                              - node -e 'console.log("Hello from node")'
