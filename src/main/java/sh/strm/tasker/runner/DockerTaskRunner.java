@@ -176,7 +176,7 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 
 		long timeFinished = System.currentTimeMillis();
 
-		log.info("Task " + task.getName() + " finished in " + (timeFinished - timeStart));
+		log.info(buildFinishMessage(task, timeStart, timeFinished));
 
 		if (!task.isKeepContainerAfterExecution()) {
 			log.info("Removing finished container " + containerId);
@@ -184,6 +184,15 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		}
 
 		return result;
+	}
+
+	private String buildFinishMessage(DockerTask task, long timeStart, long timeFinished) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Task ");
+		sb.append(task.getName());
+		sb.append(" took ");
+		sb.append(timeFinished - timeStart);
+		return sb.toString();
 	}
 
 }
