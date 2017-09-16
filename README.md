@@ -160,7 +160,8 @@ Every is a representation for a more simple understanding, like `every: minute`,
 
  * Minute - Every minute inside **one hour** period. For example, `every: 10 minutes`, will result in 6 executions, at 00, 10, 20, 30, 40 and 50. Every minute scheduled task will start it's first execution at the first minute of the hour (00).
  * Hour - Every hour inside **one day** period. For example, `every: 6 hours` will result in 4 executions, at 00, 06, 12 and 18. Every hour scheduled task will start it's execution at the very first hour of the day (00 - midnight).
- * Weekday - Every weekday as in the list (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday). The task will be executed at the first minute of the first hour of the respective day.
+ * Weekday - Every weekday as in the list (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday). The task will be executed at the first minute of the first hour of the respective day. For example `every: monday`.
+  * Year - Will be executed in the very first second, of the first minute, of the first day, of the first month of the year.
  
 ## Cron
  
@@ -171,3 +172,14 @@ Every is a representation for a more simple understanding, like `every: minute`,
  Configuration is the place where additional components of Tasker can be configured.
  
   * `global-environment` - A list of environment variables that will be assigned to all tasks. Note that this variables are overwritten by `environment` variables section of each task in case of a conflit.
+  
+# Logging
+
+If you want to suppress some of the logging information, you can add the following to your configuration
+
+```yaml
+logging:
+  level:
+    ROOT: WARN
+    org.springframework.web: WARN
+```

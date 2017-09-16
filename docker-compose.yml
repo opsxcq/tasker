@@ -9,6 +9,8 @@ services:
             configuration: |
                 logging:
                     level:
+                        ROOT: WARN
+                        org.springframework.web: WARN
                         sh.strm: DEBUG
                 schedule:
                     - every: minute
