@@ -1,7 +1,6 @@
 logging:
   level:
-    org.springframework.web: WARN
-    org.springframework.test: WARN
+    org.springframework: WARN
 
 config:
   global-environment:
