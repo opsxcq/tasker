@@ -90,7 +90,7 @@ public class DockerTask extends Task {
 		return ports;
 	}
 
-	public void setPorts(String[] ports) {
+	public void setPorts(String... ports) {
 		if (ports != null) {
 			for (String port : ports) {
 				if (port != null) {
@@ -100,6 +100,16 @@ public class DockerTask extends Task {
 					String split[] = port.split(":");
 					if (split.length != 2 || split[0] == null || split[0].length() == 0 || split[1] == null || split[1].length() == 0) {
 						throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping");
+					}
+					try {
+						int external = Integer.parseInt(split[0]);
+						int internal = Integer.parseInt(split[1]);
+
+						if (external <= 0 || external > 0xFFFF || internal <= 0 || internal > 0xFFFF) {
+							throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
+						}
+					} catch (NumberFormatException e) {
+						throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
 					}
 				}
 			}

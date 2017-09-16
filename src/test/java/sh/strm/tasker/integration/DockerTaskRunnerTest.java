@@ -99,6 +99,17 @@ public class DockerTaskRunnerTest {
 	public void testDockerEnvironmentParseVariablesError3() throws Exception {
 		try {
 			DockerTask task = new DockerTask();
+			task.setEnvironment("ItWontWork:");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerEnvironmentParseVariablesError4() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
 			task.setEnvironment("ItWontWork=");
 			fail();
 		} catch (IllegalArgumentException e) {
@@ -161,13 +172,24 @@ public class DockerTaskRunnerTest {
 		}
 	}
 
+	@Test
+	public void testDockerVolumeParseError4() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setVolumes("ItWontWork=");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////
 
 	@Test
 	public void testDockerPortsParseError() throws Exception {
 		try {
 			DockerTask task = new DockerTask();
-			task.setVolumes("ItWontWork");
+			task.setPorts("ItWontWork");
 			fail();
 		} catch (IllegalArgumentException e) {
 			// OK
@@ -178,7 +200,7 @@ public class DockerTaskRunnerTest {
 	public void testDockerPortseParseError2() throws Exception {
 		try {
 			DockerTask task = new DockerTask();
-			task.setVolumes("ItWontWork=2");
+			task.setPorts("ItWontWork=2");
 			fail();
 		} catch (IllegalArgumentException e) {
 			// OK
@@ -189,7 +211,73 @@ public class DockerTaskRunnerTest {
 	public void testDockerPortsParseError3() throws Exception {
 		try {
 			DockerTask task = new DockerTask();
-			task.setVolumes("ItWontWork:");
+			task.setPorts("ItWontWork:");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerPortsParseErrorOutOfRange1() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setPorts("80:100000");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerPortsParseErrorOutOfRange2() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setPorts("100000:80");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerPortsParseErrorOutOfRange3() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setPorts("0:80");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerPortsParseErrorOutOfRange4() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setPorts("80:0");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerPortsParseErrorOutOfRange5() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setPorts("80:-20");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testDockerPortsParseErrorOutOfRange6() throws Exception {
+		try {
+			DockerTask task = new DockerTask();
+			task.setPorts("80:-20");
 			fail();
 		} catch (IllegalArgumentException e) {
 			// OK
