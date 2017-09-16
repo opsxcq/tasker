@@ -2,8 +2,6 @@ logging:
   level:
     org.springframework.web: WARN
     org.springframework.test: WARN
-    guru.springframework.controllers: WARN
-    org.hibernate: WARN
 
 config:
   global-environment:
