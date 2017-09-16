@@ -7,3 +7,4 @@ script:
     - docker -H tcp://localhost:12375 version
     - export DOCKER_HOST='tcp://localhost:12375'
     - mvn clean verify
+    - bash <(curl -s https://codecov.io/bash)
