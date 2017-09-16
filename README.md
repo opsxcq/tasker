@@ -1,6 +1,6 @@
 # Tasker, a task runner
 [![Build Status](https://img.shields.io/travis/opsxcq/tasker.svg?style=plastic)](https://travis-ci.org/opsxcq/tasker)
-[![Coverage](https://img.shields.io/codecov/c/github/opsxcq/tasker.svg?style=plastic)]
+[![Coverage](https://img.shields.io/codecov/c/github/opsxcq/tasker.svg?style=plastic)](https://codecov.io/gh/opsxcq/tasker/branch/master)
 [![Docker Pulls](https://img.shields.io/docker/pulls/strm/tasker.svg?style=plastic)](https://hub.docker.com/r/strm/tasker/)
 
 Tasker is a task runner, plain and simple. Define tasks, schedule them, and that's it !
