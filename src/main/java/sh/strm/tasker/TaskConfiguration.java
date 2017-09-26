@@ -1,5 +1,6 @@
 package sh.strm.tasker;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,6 +17,18 @@ public class TaskConfiguration {
 	private List<DockerTask> docker;
 
 	public void setDocker(List<DockerTask> docker) {
+		if (docker != null) {
+			HashSet<String> names = new HashSet<String>();
+			for (DockerTask task : docker) {
+				if (task != null) {
+					if (names.contains(task.getName())) {
+						throw new IllegalArgumentException("Task names must be unique");
+					}
+					names.add(task.getName());
+				}
+			}
+		}
+
 		this.docker = docker;
 	}
 
