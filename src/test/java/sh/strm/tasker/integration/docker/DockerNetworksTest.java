@@ -45,6 +45,9 @@ public class DockerNetworksTest {
 		otherContainer.start();
 
 		TaskExecutionResult resultFirst = dockerRunner.executeTask(taskWrite);
+
+		DockerUtils.listNetworks();
+
 		assertEquals("green bar", resultFirst.getOutput());
 		assertTrue(resultFirst.isSuccessful());
 
