@@ -36,7 +36,7 @@ Configuration is segmented, the concept is, you first configure your tasks, and 
 
 Here is an example with several constructions:
 
-```
+```yml
 config:
     global-environment:
         - http_proxy="http://yourproxy:8080"
@@ -83,7 +83,7 @@ Configurations
  
 You can pass parameters to your task and set the entrypoint of the image as you pass in docker command line. Example:
 
-```
+```yml
 tasks:
   docker:
     - name: hello
@@ -94,7 +94,7 @@ tasks:
 
 The example above execute `/bin/bash` passing as argument `-c echo Aloha world`. Comma can be used to separate arguments in an inline array. It uses a YML structure, so you can rewrite it as you wish. For example, you can declare the parameter array as a list:
 
-```
+```yml
 tasks:
   docker:
     - name: hello
@@ -112,7 +112,7 @@ Both examples will produce the very same result.
 
 `script` directive is a facilitator to setting the `entrypoint` to `/bin/sh` and pass as arguments as a list of commands. It's syntax is just a list of commands like:
 
-```
+```yml
     - name: helloScriptStrict
       image: debian:jessie
       script:
@@ -121,7 +121,7 @@ Both examples will produce the very same result.
 
 Commands will be executed sequentially, no matter the result. To enable the strict mode, where the next command will **only** be executed if the previous command was successful (exit status 0), you can use the `script-strict` property. For example
 
-```
+```yml
     - name: helloScriptStrict
       image: debian:jessie
       script-strict: true
@@ -144,7 +144,7 @@ Tasker uses the concept of lazy loading, in other words, it will pull your image
 
 Scheduler configuration is an important aspect in Tasker. The scheduler is responsible to what it's name suggests, **schedule** tasks to be executed. It is defined in `schedule` section of the configuration file. Example
 
-```
+```yml
 schedule:
   - every: 10 minutes
     task: test
