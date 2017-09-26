@@ -52,7 +52,7 @@ schedules:
 tasks:
   docker:
     - name: backup
-      image debian:jessie
+      image: debian:jessie
       script-strict: true
       script:
         - echo Running the backup
