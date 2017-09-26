@@ -16,6 +16,8 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.Image;
+import com.spotify.docker.client.messages.Network;
+import com.spotify.docker.client.messages.NetworkConfig;
 import com.spotify.docker.client.messages.swarm.Swarm;
 
 import sh.strm.tasker.Configuration;
@@ -45,33 +47,6 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		} catch (Exception e) {
 			// OK, It will show that this node isn't a docker swarm node or manager
 		}
-	}
-
-	private boolean hasImage(String imageName) throws DockerException, InterruptedException {
-		List<Image> images = this.docker.listImages();
-		for (Image image : images) {
-			if (image.repoTags() != null) {
-				for (String tag : image.repoTags()) {
-					if (imageName.equals(tag)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	private void pullImage(String image) throws DockerException, InterruptedException {
-		log.info("Pulling image " + image);
-		this.docker.pull(image, (message) -> {
-			if (message.progressDetail() != null) {
-				Long current = message.progressDetail().current();
-				Long total = message.progressDetail().total();
-				log.info("Pulling image " + image + " " + current + " / " + total);
-			} else {
-				log.info(message);
-			}
-		});
 	}
 
 	public TaskExecutionResult executeTask(DockerTask task) throws Exception {
@@ -142,18 +117,30 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 			container.exposedPorts(task.getPorts());
 		}
 
+		// Configure container network
+		String networkName = task.getNetwork();
+		if (networkName != null && !networkName.equals("")) {
+			createNetworkIfDoesntExist(networkName);
+			hostConfig.networkMode(networkName);
+		}
+
+		// Configure the container name to be the task name
+		container.hostname(task.getName());
+
 		// Set host config
 		container.hostConfig(hostConfig.build());
 
 		final ContainerConfig containerConfig = container.build();
 
-		final ContainerCreation creation = docker.createContainer(containerConfig);
+		final ContainerCreation creation = docker.createContainer(containerConfig, task.getName());
 		String containerId = creation.id();
 
 		log.info("Starting container " + containerId + " for task " + task.getName());
 		docker.startContainer(containerId);
-		final ContainerExit exit = docker.waitContainer(containerId);
 
+		checkContainerCreationState(containerId);
+
+		final ContainerExit exit = docker.waitContainer(containerId);
 		log.info("Container " + containerId + " finished with exit code " + exit.statusCode());
 
 		// TODO : Do some descent exception treatment
@@ -184,6 +171,62 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		}
 
 		return result;
+	}
+
+	private void createNetworkIfDoesntExist(String networkName) throws DockerException, InterruptedException {
+		synchronized (DockerTaskRunner.class) {
+			if (!hasNetwork(networkName)) {
+				com.spotify.docker.client.messages.NetworkConfig.Builder networkConfig = NetworkConfig.builder();
+				networkConfig.name(networkName);
+				networkConfig.attachable(true);
+				docker.createNetwork(networkConfig.build());
+			}
+		}
+	}
+
+	private void checkContainerCreationState(String containerId) throws DockerException, InterruptedException {
+		String error = docker.inspectContainer(containerId).state().error();
+		if (error != null && !error.equals("")) {
+			throw new IllegalStateException("Container " + containerId + " creation failed:" + error);
+		}
+	}
+
+	private boolean hasNetwork(String name) throws DockerException, InterruptedException {
+		if (name != null && !"".equals(name)) {
+			for (Network network : docker.listNetworks()) {
+				if (name.equals(network.name())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean hasImage(String imageName) throws DockerException, InterruptedException {
+		List<Image> images = this.docker.listImages();
+		for (Image image : images) {
+			if (image.repoTags() != null) {
+				for (String tag : image.repoTags()) {
+					if (imageName.equals(tag)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	private void pullImage(String image) throws DockerException, InterruptedException {
+		log.info("Pulling image " + image);
+		this.docker.pull(image, (message) -> {
+			if (message.progressDetail() != null) {
+				Long current = message.progressDetail().current();
+				Long total = message.progressDetail().total();
+				log.info("Pulling image " + image + " " + current + " / " + total);
+			} else {
+				log.info(message);
+			}
+		});
 	}
 
 	private String buildFinishMessage(DockerTask task, long timeStart, long timeFinished) {

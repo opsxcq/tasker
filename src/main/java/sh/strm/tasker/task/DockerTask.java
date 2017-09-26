@@ -10,6 +10,7 @@ public class DockerTask extends Task {
 	private String[] environment;
 	private String[] volumes;
 	private String[] ports;
+	private String network;
 
 	private boolean scriptStrict;
 	private String[] script;
@@ -115,6 +116,19 @@ public class DockerTask extends Task {
 			}
 		}
 		this.ports = ports;
+	}
+
+	public String getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(String network) {
+		if (network != null) {
+			if ("".equals(network)) {
+				throw new IllegalArgumentException("Invalid network name");
+			}
+		}
+		this.network = network;
 	}
 
 	public String[] getScript() {
