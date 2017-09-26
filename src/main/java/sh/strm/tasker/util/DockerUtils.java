@@ -33,14 +33,4 @@ public class DockerUtils {
 		}
 	}
 
-	public static void listNetworks() throws Exception {
-		DefaultDockerClient docker = DefaultDockerClient.fromEnv().build();
-		for (Network network : docker.listNetworks()) {
-			System.out.println("-------------NETWORK=" + network.name());
-		}
-		for (Network network : docker.listNetworks()) {
-			System.out.println(network);
-		}
-	}
-
 }
