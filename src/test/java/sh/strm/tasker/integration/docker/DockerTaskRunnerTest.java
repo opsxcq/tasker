@@ -2,6 +2,9 @@ package sh.strm.tasker.integration.docker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +62,28 @@ public class DockerTaskRunnerTest {
 		assertTrue(task.isScriptStrict());
 		TaskExecutionResult result = dockerRunner.executeTask(task);
 		assertEquals("green bar", result.getOutput());
+	}
+
+	@Test
+	public void testDontAcceptDuplicatedTaskName() {
+		try {
+			DockerTask task1 = new DockerTask();
+			task1.setName("task01");
+
+			DockerTask task2 = new DockerTask();
+			task2.setName("task02");
+
+			TaskConfiguration config = new TaskConfiguration();
+
+			config.setDocker(Arrays.asList(new DockerTask[] { task1, task2 }));
+
+			// Must fail to add this;
+			config.setDocker(Arrays.asList(new DockerTask[] { task1, task2, task2 }));
+
+			fail();
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
 	}
 
 }
