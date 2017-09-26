@@ -48,7 +48,7 @@ public class DockerNetworksTest {
 		assertEquals("green bar", resultFirst.getOutput());
 		assertTrue(resultFirst.isSuccessful());
 
-		otherContainer.join(30000);
+		otherContainer.join(60000);
 		assertTrue("Check if background container was succesful", secondSuccess.get());
 
 		DockerUtils.removeNetwork("testNetwork");
