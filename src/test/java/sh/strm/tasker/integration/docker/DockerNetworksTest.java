@@ -44,6 +44,8 @@ public class DockerNetworksTest {
 		});
 		otherContainer.start();
 
+		Thread.sleep(5000);
+
 		TaskExecutionResult resultFirst = dockerRunner.executeTask(taskWrite);
 
 		DockerUtils.listNetworks();
