@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ DockerEnvironmentVariablesTest.class, DockerPortsTest.class, DockerTaskRunnerTest.class, DockerVolumesTest.class })
+@SuiteClasses({ DockerEnvironmentVariablesTest.class, DockerPortsTest.class, DockerTaskRunnerTest.class, DockerVolumesTest.class, DockerNetworksTest.class })
 public class DockerAllTests {
 
 }

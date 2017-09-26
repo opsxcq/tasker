@@ -98,3 +98,16 @@ tasks:
       always-pull: true
       script:
         - echo green bar
+        
+    - name: helloWithNetwork01
+      image: debian:jessie
+      script:
+        - ping -c 4 helloWithNetwork02 >/dev/null && echo green bar
+      network: testNetwork
+
+    - name: helloWithNetwork02
+      image: debian:jessie
+      script:
+        - sleep 10
+        - echo green bar
+      network: testNetwork

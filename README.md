@@ -76,6 +76,7 @@ Configurations
  * `volumes` - An array, just like you map `volumes` in your `docker-compose.yml`.
  * `ports` - An array, just like you map `ports` in your `docker-compose.yml`.
  * `always-pull` - A boolean (true/false) property, when it's true, Tasker will pull a newer image version updating it if there is a newer one available.
+ * `network` - If you wish to attach or use any other network that you have. If the desired network doesn't exist, it will be created.
  
  
 ## Entrypoint and Arguments
