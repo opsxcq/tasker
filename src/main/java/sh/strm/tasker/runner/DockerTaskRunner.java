@@ -3,11 +3,13 @@ package sh.strm.tasker.runner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient.ListContainersParam;
 import com.spotify.docker.client.DockerClient.LogsParam;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
@@ -22,6 +24,7 @@ import com.spotify.docker.client.messages.swarm.Swarm;
 
 import sh.strm.tasker.Configuration;
 import sh.strm.tasker.task.DockerTask;
+import sh.strm.tasker.util.DockerUtils;
 
 public class DockerTaskRunner extends Runner<DockerTask> {
 
@@ -53,96 +56,87 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		long timeStart = System.currentTimeMillis();
 		log.info("Starting the execution of the " + task.getName() + " task");
 
-		TaskExecutionResult result = new TaskExecutionResult(task);
-
 		if (!hasImage(task.getImage()) || task.isAlwaysPull()) {
 			pullImage(task.getImage());
 		}
 
-		Builder container = ContainerConfig.builder().image(task.getImage());
-		com.spotify.docker.client.messages.HostConfig.Builder hostConfig = HostConfig.builder();
-
-		if (task.getEntrypoint() != null) {
-			container = container.entrypoint(task.getEntrypoint());
-		}
-
-		if (task.getArguments() != null) {
-			container = container.cmd(task.getArguments());
-		}
-
-		// If we got a script property, ignore everything else and use this
-		if (task.getScript() != null) {
-			container = container.entrypoint("/bin/sh");
-			// TODO : Check if the container has /bin/sh executable
-
-			// For every script line, create a monster script to pass to our shell
-			StringBuilder arguments = new StringBuilder();
-			if (task.isScriptStrict()) {
-				Arrays.asList(task.getScript()).stream().forEach(line -> arguments.append(line).append("&&"));
-				// Remove the last && because it doesn't compile in BASH
-				arguments.setLength(arguments.length() - 2);
-			} else {
-				Arrays.asList(task.getScript()).stream().forEach(line -> arguments.append(line).append(";"));
+		String containerId = getContainerByName(task.getName());
+		if (containerId != null) {
+			if (!task.isReuseContainer()) {
+				// Delete it
+				DockerUtils.removeContainer(task.getName());
+				containerId = createContainer(task);
 			}
-
-			container = container.cmd("-c", arguments.toString());
+		} else {
+			containerId = createContainer(task);
 		}
-
-		// Environment variables
-		List<String> environment = new ArrayList<String>();
-
-		if (this.config.getGlobalEnvironment() != null) {
-			environment.addAll(Arrays.asList(this.config.getGlobalEnvironment()));
-		}
-
-		if (task.getEnvironment() != null) {
-			environment.addAll(Arrays.asList(task.getEnvironment()));
-		}
-
-		if (environment.size() > 0) {
-			container.env(environment);
-		}
-
-		// Volumes
-		if (task.getVolumes() != null) {
-			for (String volume : task.getVolumes()) {
-				if (volume != null) {
-					hostConfig = hostConfig.appendBinds(volume);
-				}
-			}
-		}
-
-		// Port mappings
-		if (task.getPorts() != null) {
-			container.exposedPorts(task.getPorts());
-		}
-
-		// Configure container network
-		String networkName = task.getNetwork();
-		if (networkName != null && !networkName.equals("")) {
-			createNetworkIfDoesntExist(networkName);
-			hostConfig.networkMode(networkName);
-		}
-
-		// Configure the container name to be the task name
-		container.hostname(task.getName());
-
-		// Set host config
-		container.hostConfig(hostConfig.build());
-
-		final ContainerConfig containerConfig = container.build();
-
-		final ContainerCreation creation = docker.createContainer(containerConfig, task.getName());
-		String containerId = creation.id();
 
 		log.info("Starting container " + containerId + " for task " + task.getName());
 		docker.startContainer(containerId);
 
 		checkContainerCreationState(containerId);
 
+		TaskExecutionResult result = collectTaskExecutionResult(task, containerId);
+
+		if (!task.isKeepContainerAfterExecution() && !task.isReuseContainer()) {
+			log.info("Removing finished container " + containerId);
+			docker.removeContainer(containerId);
+		}
+
+		long timeFinished = System.currentTimeMillis();
+		log.info(buildFinishMessage(task, timeStart, timeFinished));
+		return result;
+	}
+
+	private String getContainerByName(String name) throws DockerException, InterruptedException {
+		// Container names via api start with a slash /, so if the name doesn't have one, we add
+		String search;
+		if (name != null && !name.startsWith("/")) {
+			search = "/" + name;
+		} else {
+			search = name;
+		}
+
+		String id = docker.listContainers(ListContainersParam.allContainers()).stream().//
+				filter(Objects::nonNull).//
+				filter(container -> container.names().contains(search)).//
+				findFirst().map(container -> container.id()).orElse(null);
+		return id;
+	}
+
+	private String createContainer(DockerTask task) throws DockerException, InterruptedException {
+		final ContainerConfig containerConfig = configureContainer(task);
+		final ContainerCreation creation = docker.createContainer(containerConfig, task.getName());
+		return creation.id();
+	}
+
+	private ContainerConfig configureContainer(DockerTask task) throws DockerException, InterruptedException {
+		Builder container = ContainerConfig.builder().image(task.getImage());
+		com.spotify.docker.client.messages.HostConfig.Builder hostConfig = HostConfig.builder();
+
+		configureTargetExecutable(task, container);
+
+		configureVariables(task, container);
+
+		configureVolumes(task, hostConfig);
+
+		configurePorts(task, container);
+
+		configureNetwork(task, container, hostConfig);
+
+		// Set host config
+		container.hostConfig(hostConfig.build());
+
+		final ContainerConfig containerConfig = container.build();
+		return containerConfig;
+	}
+
+	private TaskExecutionResult collectTaskExecutionResult(DockerTask task, String containerId)
+			throws DockerException, InterruptedException {
 		final ContainerExit exit = docker.waitContainer(containerId);
 		log.info("Container " + containerId + " finished with exit code " + exit.statusCode());
 
+		TaskExecutionResult result = new TaskExecutionResult(task);
 		// TODO : Do some descent exception treatment
 		if (exit.statusCode() != 0) {
 			result.markAsFinished(exit.statusCode());
@@ -161,16 +155,84 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 
 		result.setOutput(logs);
 
-		long timeFinished = System.currentTimeMillis();
+		return result;
+	}
 
-		log.info(buildFinishMessage(task, timeStart, timeFinished));
-
-		if (!task.isKeepContainerAfterExecution()) {
-			log.info("Removing finished container " + containerId);
-			docker.removeContainer(containerId);
+	private void configureNetwork(DockerTask task, Builder container, com.spotify.docker.client.messages.HostConfig.Builder hostConfig)
+			throws DockerException, InterruptedException {
+		// Configure container network
+		String networkName = task.getNetwork();
+		if (networkName != null && !networkName.equals("")) {
+			createNetworkIfDoesntExist(networkName);
+			hostConfig.networkMode(networkName);
 		}
 
-		return result;
+		// Configure the container name to be the task name
+		container.hostname(task.getName());
+	}
+
+	private void configurePorts(DockerTask task, Builder container) {
+		// Port mappings
+		if (task.getPorts() != null) {
+			container.exposedPorts(task.getPorts());
+		}
+	}
+
+	private void configureVolumes(DockerTask task, com.spotify.docker.client.messages.HostConfig.Builder hostConfig) {
+		// Volumes
+		if (task.getVolumes() != null) {
+			for (String volume : task.getVolumes()) {
+				if (volume != null) {
+					hostConfig.appendBinds(volume);
+				}
+			}
+		}
+	}
+
+	private void configureTargetExecutable(DockerTask task, Builder container) {
+
+		// If we got a script property, ignore everything else and use this
+		if (task.getScript() != null) {
+			container.entrypoint("/bin/sh");
+			// TODO : Check if the container has /bin/sh executable
+
+			// For every script line, create a monster script to pass to our shell
+			StringBuilder arguments = new StringBuilder();
+			if (task.isScriptStrict()) {
+				Arrays.asList(task.getScript()).stream().forEach(line -> arguments.append(line).append("&&"));
+				// Remove the last && because it doesn't compile in BASH
+				arguments.setLength(arguments.length() - 2);
+			} else {
+				Arrays.asList(task.getScript()).stream().forEach(line -> arguments.append(line).append(";"));
+			}
+
+			container.cmd("-c", arguments.toString());
+		} else {
+			if (task.getEntrypoint() != null) {
+				container.entrypoint(task.getEntrypoint());
+			}
+
+			if (task.getArguments() != null) {
+				container.cmd(task.getArguments());
+			}
+		}
+	}
+
+	private void configureVariables(DockerTask task, Builder container) {
+		// Environment variables
+		List<String> environment = new ArrayList<String>();
+
+		if (this.config.getGlobalEnvironment() != null) {
+			environment.addAll(Arrays.asList(this.config.getGlobalEnvironment()));
+		}
+
+		if (task.getEnvironment() != null) {
+			environment.addAll(Arrays.asList(task.getEnvironment()));
+		}
+
+		if (environment.size() > 0) {
+			container.env(environment);
+		}
 	}
 
 	private void createNetworkIfDoesntExist(String networkName) throws DockerException, InterruptedException {

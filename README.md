@@ -72,12 +72,16 @@ Configurations
 
  * `image` - the image in the very same format as it is expressed for docker, in `repo/image:tag` for images in the default repository, of `server/repo/image:tag` for images residing somewhere else.
  * `environment` - Define environment varibales to be used in the task execution, they follow the same pattern that you use in `docker-compose.yml` file, a list of `variable=value`.
- * `keepContainerAfterExecution` - Keep container after it executes, won't delete it, *WARNING* it can leave a lot of trash.
  * `volumes` - An array, just like you map `volumes` in your `docker-compose.yml`.
  * `ports` - An array, just like you map `ports` in your `docker-compose.yml`.
- * `always-pull` - A boolean (true/false) property, when it's true, Tasker will pull a newer image version updating it if there is a newer one available.
+
  * `network` - If you wish to attach or use any other network that you have. If the desired network doesn't exist, it will be created.
- 
+
+Configurations regarding container life cicle:
+
+ * `keepContainerAfterExecution` - Keep container after it executes, won't delete it, *WARNING* it can leave a lot of trash. USE IT FOR DEBUGING ONLY !
+ * `always-pull` - A boolean (true/false) property, when it's true, Tasker will pull a newer image version updating it if there is a newer one available.
+ * `reuse-container` - If the container doesn't exist, create it, if there is already a container with that name, reuse the container.
  
 ## Entrypoint and Arguments
  
