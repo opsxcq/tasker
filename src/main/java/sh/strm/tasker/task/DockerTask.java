@@ -17,6 +17,7 @@ public class DockerTask extends Task {
 
 	private boolean keepContainerAfterExecution;
 	private boolean alwaysPull;
+	private boolean reuseContainer;
 
 	public String getImage() {
 		return image;
@@ -161,6 +162,14 @@ public class DockerTask extends Task {
 
 	public void setAlwaysPull(boolean alwaysPull) {
 		this.alwaysPull = alwaysPull;
+	}
+
+	public boolean isReuseContainer() {
+		return reuseContainer;
+	}
+
+	public void setReuseContainer(boolean reuseContainer) {
+		this.reuseContainer = reuseContainer;
 	}
 
 }
