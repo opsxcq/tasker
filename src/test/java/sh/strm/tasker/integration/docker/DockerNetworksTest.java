@@ -16,7 +16,7 @@ import sh.strm.tasker.TaskConfiguration;
 import sh.strm.tasker.runner.DockerTaskRunner;
 import sh.strm.tasker.runner.TaskExecutionResult;
 import sh.strm.tasker.task.DockerTask;
-import sh.strm.tasker.util.DockerUtils;
+import sh.strm.tasker.util.Docker;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -27,6 +27,9 @@ public class DockerNetworksTest {
 
 	@Autowired
 	private DockerTaskRunner dockerRunner;
+
+	@Autowired
+	private Docker client;
 
 	@Test
 	public void testDockerRunContainerWithNetwork() throws Exception {
@@ -54,7 +57,7 @@ public class DockerNetworksTest {
 		otherContainer.join(60000);
 		assertTrue("Check if background container was succesful", secondSuccess.get());
 
-		DockerUtils.removeNetwork("testNetwork");
+		client.removeNetwork("testNetwork");
 	}
 
 	@Test

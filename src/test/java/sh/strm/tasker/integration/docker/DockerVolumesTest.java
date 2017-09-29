@@ -14,7 +14,7 @@ import sh.strm.tasker.TaskConfiguration;
 import sh.strm.tasker.runner.DockerTaskRunner;
 import sh.strm.tasker.runner.TaskExecutionResult;
 import sh.strm.tasker.task.DockerTask;
-import sh.strm.tasker.util.DockerUtils;
+import sh.strm.tasker.util.Docker;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,6 +25,9 @@ public class DockerVolumesTest {
 
 	@Autowired
 	private DockerTaskRunner dockerRunner;
+
+	@Autowired
+	private Docker client;
 
 	@Test
 	public void testDockerRunContainerWithVolume() throws Exception {
@@ -43,7 +46,7 @@ public class DockerVolumesTest {
 		TaskExecutionResult resultSecond = dockerRunner.executeTask(taskRead);
 		assertEquals(expected, resultSecond.getOutput());
 
-		DockerUtils.removeVolume("testVolume");
+		client.removeVolume("testVolume");
 	}
 
 	@Test
