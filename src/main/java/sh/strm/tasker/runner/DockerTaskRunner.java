@@ -3,13 +3,11 @@ package sh.strm.tasker.runner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.spotify.docker.client.DefaultDockerClient;
-import com.spotify.docker.client.DockerClient.ListContainersParam;
 import com.spotify.docker.client.DockerClient.LogsParam;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
@@ -17,20 +15,19 @@ import com.spotify.docker.client.messages.ContainerConfig.Builder;
 import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
-import com.spotify.docker.client.messages.Image;
-import com.spotify.docker.client.messages.Network;
 import com.spotify.docker.client.messages.NetworkConfig;
 import com.spotify.docker.client.messages.swarm.Swarm;
 
 import sh.strm.tasker.Configuration;
 import sh.strm.tasker.task.DockerTask;
-import sh.strm.tasker.util.DockerUtils;
+import sh.strm.tasker.util.Docker;
 
 public class DockerTaskRunner extends Runner<DockerTask> {
 
 	static Logger log = Logger.getLogger(DockerTaskRunner.class.getName());
 
 	private DefaultDockerClient docker;
+	private Docker client;
 
 	@Autowired
 	private Configuration config;
@@ -40,6 +37,7 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 
 	public DockerTaskRunner() throws Exception {
 		this.docker = DefaultDockerClient.fromEnv().build();
+		this.client = new Docker(this.docker);
 		// Check swarm status
 
 		try {
@@ -56,15 +54,15 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		long timeStart = System.currentTimeMillis();
 		log.info("Starting the execution of the " + task.getName() + " task");
 
-		if (!hasImage(task.getImage()) || task.isAlwaysPull()) {
-			pullImage(task.getImage());
+		if (!this.client.hasImage(task.getImage()) || task.isAlwaysPull()) {
+			this.client.pullImage(task.getImage());
 		}
 
-		String containerId = getContainerByName(task.getName());
+		String containerId = this.client.getContainerIdByName(task.getName());
 		if (containerId != null) {
 			if (!task.isReuseContainer()) {
 				// Delete it
-				DockerUtils.removeContainer(task.getName());
+				this.client.removeContainer(task.getName());
 				containerId = createContainer(task);
 			}
 		} else {
@@ -88,29 +86,13 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		return result;
 	}
 
-	private String getContainerByName(String name) throws DockerException, InterruptedException {
-		// Container names via api start with a slash /, so if the name doesn't have one, we add
-		String search;
-		if (name != null && !name.startsWith("/")) {
-			search = "/" + name;
-		} else {
-			search = name;
-		}
-
-		String id = docker.listContainers(ListContainersParam.allContainers()).stream().//
-				filter(Objects::nonNull).//
-				filter(container -> container.names().contains(search)).//
-				findFirst().map(container -> container.id()).orElse(null);
-		return id;
-	}
-
-	private String createContainer(DockerTask task) throws DockerException, InterruptedException {
+	private String createContainer(DockerTask task) throws Exception {
 		final ContainerConfig containerConfig = configureContainer(task);
 		final ContainerCreation creation = docker.createContainer(containerConfig, task.getName());
 		return creation.id();
 	}
 
-	private ContainerConfig configureContainer(DockerTask task) throws DockerException, InterruptedException {
+	private ContainerConfig configureContainer(DockerTask task) throws Exception {
 		Builder container = ContainerConfig.builder().image(task.getImage());
 		com.spotify.docker.client.messages.HostConfig.Builder hostConfig = HostConfig.builder();
 
@@ -159,7 +141,7 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 	}
 
 	private void configureNetwork(DockerTask task, Builder container, com.spotify.docker.client.messages.HostConfig.Builder hostConfig)
-			throws DockerException, InterruptedException {
+			throws Exception {
 		// Configure container network
 		String networkName = task.getNetwork();
 		if (networkName != null && !networkName.equals("")) {
@@ -235,9 +217,9 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		}
 	}
 
-	private void createNetworkIfDoesntExist(String networkName) throws DockerException, InterruptedException {
+	private void createNetworkIfDoesntExist(String networkName) throws Exception {
 		synchronized (DockerTaskRunner.class) {
-			if (!hasNetwork(networkName)) {
+			if (!this.client.hasNetwork(networkName)) {
 				com.spotify.docker.client.messages.NetworkConfig.Builder networkConfig = NetworkConfig.builder();
 				networkConfig.name(networkName);
 				networkConfig.attachable(true);
@@ -251,44 +233,6 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		if (error != null && !error.equals("")) {
 			throw new IllegalStateException("Container " + containerId + " creation failed:" + error);
 		}
-	}
-
-	private boolean hasNetwork(String name) throws DockerException, InterruptedException {
-		if (name != null && !"".equals(name)) {
-			for (Network network : docker.listNetworks()) {
-				if (name.equals(network.name())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean hasImage(String imageName) throws DockerException, InterruptedException {
-		List<Image> images = this.docker.listImages();
-		for (Image image : images) {
-			if (image.repoTags() != null) {
-				for (String tag : image.repoTags()) {
-					if (imageName.equals(tag)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	private void pullImage(String image) throws DockerException, InterruptedException {
-		log.info("Pulling image " + image);
-		this.docker.pull(image, (message) -> {
-			if (message.progressDetail() != null) {
-				Long current = message.progressDetail().current();
-				Long total = message.progressDetail().total();
-				log.info("Pulling image " + image + " " + current + " / " + total);
-			} else {
-				log.info(message);
-			}
-		});
 	}
 
 	private String buildFinishMessage(DockerTask task, long timeStart, long timeFinished) {

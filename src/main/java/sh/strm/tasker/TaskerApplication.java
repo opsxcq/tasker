@@ -7,6 +7,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 import sh.strm.tasker.runner.DockerTaskRunner;
+import sh.strm.tasker.util.Docker;
 
 @SpringBootApplication
 public class TaskerApplication {
@@ -23,6 +24,11 @@ public class TaskerApplication {
 	@Bean
 	public DockerTaskRunner getDefaultDockerClient() throws Exception {
 		return new DockerTaskRunner();
+	}
+
+	@Bean
+	public Docker defaultClient() throws Exception {
+		return new Docker();
 	}
 
 }

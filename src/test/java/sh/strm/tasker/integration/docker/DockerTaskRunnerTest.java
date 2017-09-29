@@ -16,7 +16,7 @@ import sh.strm.tasker.TaskConfiguration;
 import sh.strm.tasker.runner.DockerTaskRunner;
 import sh.strm.tasker.runner.TaskExecutionResult;
 import sh.strm.tasker.task.DockerTask;
-import sh.strm.tasker.util.DockerUtils;
+import sh.strm.tasker.util.Docker;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -27,6 +27,9 @@ public class DockerTaskRunnerTest {
 
 	@Autowired
 	private DockerTaskRunner dockerRunner;
+
+	@Autowired
+	private Docker client;
 
 	@Test
 	public void testDockerRunContainerAlwaysPull() throws Exception {
@@ -90,7 +93,7 @@ public class DockerTaskRunnerTest {
 	@Test
 	public void testContainerReuse() throws Exception {
 		// Just some cleanup before the test
-		DockerUtils.removeContainer("helloReuseContainer");
+		client.removeContainer("helloReuseContainer");
 
 		DockerTask task = conf.getDockerTaskByName("helloReuseContainer");
 		assertTrue(task.isReuseContainer());
@@ -101,13 +104,13 @@ public class DockerTaskRunnerTest {
 		TaskExecutionResult resultSecond = dockerRunner.executeTask(task);
 		assertEquals("green bar", resultSecond.getOutput());
 
-		assertTrue("Remove container", DockerUtils.removeContainer("helloReuseContainer"));
+		assertTrue("Remove container", client.removeContainer("helloReuseContainer"));
 	}
 
 	@Test
 	public void testContainerRemovalIfExists() throws Exception {
 		// Test if container exists
-		DockerUtils.removeContainer("helloRemoveExistingContainer");
+		client.removeContainer("helloRemoveExistingContainer");
 
 		DockerTask task = conf.getDockerTaskByName("helloRemoveExistingContainer");
 		assertTrue(task.isKeepContainerAfterExecution());
@@ -118,7 +121,7 @@ public class DockerTaskRunnerTest {
 		TaskExecutionResult resultSecond = dockerRunner.executeTask(task);
 		assertEquals("green bar", resultSecond.getOutput());
 
-		assertTrue("Remove container", DockerUtils.removeContainer("helloRemoveExistingContainer"));
+		assertTrue("Remove container", client.removeContainer("helloRemoveExistingContainer"));
 	}
 
 }
