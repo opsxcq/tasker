@@ -24,12 +24,91 @@ schedule:
     task: hello
     name: testEveryMonth
 
-
- 
   # Run two times, at 11 and 16
   - cron: 00 00 11,16 * * *
     task: hello
-    
+
+notify:
+  email:
+    - name: notifyEmailTest
+      task: helloNotifyEmail
+      when: always
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+      validate-server-on-configuration-load: false
+
+      subject: Email subject
+      sender: myemail@gmail.com
+      recipients: admin@server.local
+      content: Task finished  
+      
+    - name: notifyEmailTestMultipleRecipients
+      task: helloNotifyEmailMultipleRecipients
+      when: always
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+      validate-server-on-configuration-load: false
+
+      subject: Email subject
+      sender: myemail@gmail.com
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: Task finished    
+
+    - name: notifyEmailTestMultilineContent
+      task: helloNotifyEmailMultilineContent
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      sender: myemail@gmail.com
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
+    - name: notifyEmailWithoutSender
+      task: helloNotifyEmailWithoutSender
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
 tasks:
   docker:
     - name: hello
@@ -127,4 +206,61 @@ tasks:
         - echo green bar
         - touch test
         
+    - name: helloNotify
+      image: debian:jessie
+      script:
+        - echo green bar
+
+    - name: helloNotifyAlways
+      image: debian:jessie
+      script:
+        - echo green bar
+        
+    - name: helloNotifyAlwaysError
+      image: debian:jessie
+      script:
+        - echo green bar     
+        - cat /invalidFile  
+
+    - name: helloNotifyOnError
+      image: debian:jessie
+      script:
+        - echo green bar
+        
+    - name: helloNotifyOnErrorError
+      image: debian:jessie
+      script:
+        - echo green bar     
+        - cat /invalidFile  
+        
+    - name: helloNotifyOnSuccess
+      image: debian:jessie
+      script:
+        - echo green bar
+        
+    - name: helloNotifyOnSuccessError
+      image: debian:jessie
+      script:
+        - echo green bar     
+        - cat /invalidFile  
+        
+    - name: helloNotifyEmail
+      image: debian:jessie
+      script:
+        - echo green bar   
+
+    - name: helloNotifyEmailMultipleRecipients
+      image: debian:jessie
+      script:
+        - echo green bar   
+    
+    - name: helloNotifyEmailMultilineContent
+      image: debian:jessie
+      script:
+        - echo green bar        
+    
+    - name: helloNotifyEmailWithoutSender
+      image: debian:jessie
+      script:
+        - echo green bar        
      

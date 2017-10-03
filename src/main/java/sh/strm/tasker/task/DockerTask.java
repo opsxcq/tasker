@@ -108,10 +108,12 @@ public class DockerTask extends Task {
 						int internal = Integer.parseInt(split[1]);
 
 						if (external <= 0 || external > 0xFFFF || internal <= 0 || internal > 0xFFFF) {
-							throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
+							throw new IllegalArgumentException(
+									"Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
 						}
 					} catch (NumberFormatException e) {
-						throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
+						throw new IllegalArgumentException(
+								"Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
 					}
 				}
 			}

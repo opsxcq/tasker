@@ -16,7 +16,6 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.NetworkConfig;
-import com.spotify.docker.client.messages.swarm.Swarm;
 
 import sh.strm.tasker.Configuration;
 import sh.strm.tasker.task.DockerTask;
@@ -32,27 +31,25 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 	@Autowired
 	private Configuration config;
 
-	private Swarm swarm;
-	private boolean isSwarm;
+	//private Swarm swarm;
+	//private boolean isSwarm;
 
 	public DockerTaskRunner() throws Exception {
 		this.docker = DefaultDockerClient.fromEnv().build();
 		this.client = new Docker(this.docker);
 		// Check swarm status
 
-		try {
-			this.swarm = this.docker.inspectSwarm();
-			if (this.swarm != null && this.swarm.id() != null) {
-				this.isSwarm = true;
-			}
-		} catch (Exception e) {
-			// OK, It will show that this node isn't a docker swarm node or manager
-		}
+		//		try {
+		//			this.swarm = this.docker.inspectSwarm();
+		//			if (this.swarm != null && this.swarm.id() != null) {
+		//				this.isSwarm = true;
+		//			}
+		//		} catch (Exception e) {
+		//			// OK, It will show that this node isn't a docker swarm node or manager
+		//		}
 	}
 
 	public TaskExecutionResult executeTask(DockerTask task) throws Exception {
-		long timeStart = System.currentTimeMillis();
-		log.info("Starting the execution of the " + task.getName() + " task");
 
 		if (!this.client.hasImage(task.getImage()) || task.isAlwaysPull()) {
 			this.client.pullImage(task.getImage());
@@ -81,8 +78,6 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 			docker.removeContainer(containerId);
 		}
 
-		long timeFinished = System.currentTimeMillis();
-		log.info(buildFinishMessage(task, timeStart, timeFinished));
 		return result;
 	}
 
@@ -233,15 +228,6 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		if (error != null && !error.equals("")) {
 			throw new IllegalStateException("Container " + containerId + " creation failed:" + error);
 		}
-	}
-
-	private String buildFinishMessage(DockerTask task, long timeStart, long timeFinished) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Task ");
-		sb.append(task.getName());
-		sb.append(" took ");
-		sb.append(timeFinished - timeStart);
-		return sb.toString();
 	}
 
 }
