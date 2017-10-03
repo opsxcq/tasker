@@ -31,7 +31,7 @@ public class SchedulerSetup {
 	@Autowired
 	private DockerTaskRunner dockerRunner;
 
-	private static final Logger LOG = Logger.getLogger(SchedulerSetup.class);
+	private static final Logger log = Logger.getLogger(SchedulerSetup.class);
 
 	public void setConf(ScheduleConfiguration conf) {
 		this.conf = conf;
@@ -39,7 +39,7 @@ public class SchedulerSetup {
 
 	@PostConstruct
 	public void init() {
-		LOG.info("Scheduler configuration loaded, wiring tasks and schedules");
+		log.info("Scheduler configuration loaded, wiring tasks and schedules");
 
 		// Wire Task and Schedule configuration
 		for (Schedule schedule : conf.getSchedule()) {
@@ -50,21 +50,32 @@ public class SchedulerSetup {
 				throw new IllegalStateException("Defined task not found " + schedule.getTask() + " aborting application boot");
 			}
 
+			String scheduleName = schedule.getName();
+			if (scheduleName == null) {
+				scheduleName = "anonymous (" + schedule.getCron() + ")";
+			}
+			log.info("Wiring task " + task.getName() + " to " + scheduleName);
+
 			schedule.setRealTask(task);
 
 		}
 
 		for (Schedule schedule : conf.getSchedule()) {
-			LOG.info(schedule);
+			log.info(schedule);
 
 			Trigger trigger = new CronTrigger(schedule.getCron());
 			taskScheduler.schedule(() -> {
 				try {
 					DockerTask task = schedule.getRealTask();
-					TaskExecutionResult result = dockerRunner.executeTask(task);
+					TaskExecutionResult result = dockerRunner.execute(task);
 					// TODO: Save task execution result
-					LOG.debug("Task " + task.getName() + " output");
-					LOG.debug(result.getOutput());
+					if (result != null) {
+						log.debug("Task " + task.getName() + " output");
+						log.debug(result.getOutput());
+					} else {
+						log.debug("Task " + task.getName() + " suffered an unexpected error and Tasker was unable"
+								+ "to determine it's result, please check it");
+					}
 
 				} catch (Exception e) {
 					// TODO: Save task result in case of error

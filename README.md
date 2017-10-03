@@ -178,6 +178,78 @@ Every is a representation for a more simple understanding, like `every: minute`,
  
   * `global-environment` - A list of environment variables that will be assigned to all tasks. Note that this variables are overwritten by `environment` variables section of each task in case of a conflit.
   
+# Notifications
+
+Is possible to configure Tasker to notify other components when tasks finish. Notifications are triggered *after* the task is completed. Notifications are defined in the `notify` section of the configuration file, separated for each sub-type of notification, for example:
+
+```
+notify:
+  email:
+    - name: notifyEmailTest
+      task: helloNotifyEmail
+      when: always
+      server: mail.gmail.com
+      subject: Email subject
+      sender: myemail@gmail.com
+```
+
+Notifications need to be linked to a task, so a valid `task` should be informed.
+
+ * `name` - A name to identify the notification.
+ * `task` - Which task will trigger this notification
+ * `when` - When the trigger will run. There are three scenarios, 
+   * `always` - Is the *default* behavior, it will trigger the notification every time that the task runs.
+   * `on-success` - Will trigger the notification only if the task is successful.
+   * `on-error` - Will trigger the notification only if the task isn't successful.
+
+
+
+## E-mail notifications
+  
+In Tasker, e-mail notifications are a sub-category of notifications. E-mail notifications are configured with `email:` field, inside the `notify` section. Bellow a simple example configuration using Gmail:
+
+```
+notify:
+  email:
+    - name: notifyEmailTest
+      task: helloNotifyEmail
+      server: mail.gmail.com
+      subject: Email subject
+      sender: myemail@gmail.com
+```
+
+A complete example bellow
+
+```
+notify:
+  email:
+    - name: notifyEmailTest
+      task: helloNotifyEmail
+      server: mail.gmail.com
+      port: 9925
+      subject: Email subject
+      sender: myemail@gmail.com
+```
+
+Configuration parameters regarding the connection to the e-mail server:
+
+ * `server` - Remote server where the email server is running. Default `localhost`.
+ * `port` - Remote port where the server is listening to. Default `587`.
+ * `username` - Username that will be used in the authentication with the server.
+ * `password` - Password for the given username.
+ * `protocol` - Protocol to use for e-mail transfer. Default `smtp`.
+ * `starttls` - Use TLS or not. Default is `true`.
+ * `debug` - Enable a more verbose output of the e-mail transfer process, use it only for troubleshooting. Default `false`.
+ * `validate-server-on-configuration-load` - Validate the e-mail configuration when Tasker startup, and abort it if isn't possible to connect to the e-mail server. Default `true`.
+ 
+Configuration parameters regarding the e-mail to be sent:
+
+ * `subject` - The subject of the e-mail.
+ * `sender` - The `FROM` field in the e-mail.
+ * `recipients` - A list of e-mail addresses that will receive the e-mail.
+ * `content` - The content of the e-mail.
+  
+  
 # Logging
 
 If you want to suppress some of the logging information, you can add the following to your configuration
