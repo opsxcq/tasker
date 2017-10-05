@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.icegreen.greenmail.util.GreenMail;
@@ -26,6 +27,7 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
 import sh.strm.tasker.TaskConfiguration;
+import sh.strm.tasker.notifier.NotifierAllTests.CustomTestYamlInitialization;
 import sh.strm.tasker.notify.EmailNotifier;
 import sh.strm.tasker.runner.DockerTaskRunner;
 import sh.strm.tasker.runner.TaskExecutionResult;
@@ -33,6 +35,7 @@ import sh.strm.tasker.task.DockerTask;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ContextConfiguration(initializers = CustomTestYamlInitialization.class)
 public class EmailNotifierTests {
 
 	@Autowired
@@ -217,6 +220,8 @@ public class EmailNotifierTests {
 
 	private EmailNotifier getEmailNotifierForTask(String taskName) {
 		DockerTask task = conf.getDockerTaskByName(taskName);
+		assertThat(task).isNotNull();
+
 		assertThat(task.getNotifiers().size()).isEqualTo(1);
 		EmailNotifier notifier = (EmailNotifier) task.getNotifiers().get(0);
 		assertNotNull(notifier);

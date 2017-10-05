@@ -25,7 +25,9 @@ public class NotifierConfiguration {
 	public List<Notifier> getNotifiers() {
 		ArrayList<Notifier> notifiers = new ArrayList<Notifier>();
 
-		notifiers.addAll(email);
+		if (this.email != null) {
+			notifiers.addAll(email);
+		}
 
 		return notifiers;
 	}
