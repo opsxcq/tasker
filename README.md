@@ -172,12 +172,6 @@ Every is a representation for a more simple understanding, like `every: minute`,
  
  `cron` is another way to set the expected trigger to your scheduled task. It obey the standard `unix` cron format, but with the exception that it has one more field. Is a field representing `seconds`, and is the first field, from `00` to `59` are the accepted values. 
  
-# `config` aka Configuration of the Configuration section
- 
- Configuration is the place where additional components of Tasker can be configured.
- 
-  * `global-environment` - A list of environment variables that will be assigned to all tasks. Note that this variables are overwritten by `environment` variables section of each task in case of a conflit.
-  
 # Notifications
 
 Is possible to configure Tasker to notify other components when tasks finish. Notifications are triggered *after* the task is completed. Notifications are defined in the `notify` section of the configuration file, separated for each sub-type of notification, for example:
@@ -213,9 +207,12 @@ notify:
   email:
     - name: notifyEmailTest
       task: helloNotifyEmail
-      server: mail.gmail.com
+      server: smtp.gmail.com
+      username: youruser@gmail.com
+      password: yourpassword
+      recipients: myemail@gmail.com
       subject: Email subject
-      sender: myemail@gmail.com
+      content: Your message
 ```
 
 A complete example bellow
@@ -223,12 +220,23 @@ A complete example bellow
 ```
 notify:
   email:
-    - name: notifyEmailTest
-      task: helloNotifyEmail
-      server: mail.gmail.com
-      port: 9925
+    - name: notifyMyTaskOnErrorOnly
+      task: yourTaskName
+      when: on-error
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: yourUserPassword
+      protocol: smtp
+      starttls: true
+      debug: true
       subject: Email subject
-      sender: myemail@gmail.com
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
 ```
 
 Configuration parameters regarding the connection to the e-mail server:
@@ -260,3 +268,9 @@ logging:
     ROOT: WARN
     org.springframework.web: WARN
 ```
+
+# `config` aka Configuration of the Configuration section
+ 
+ Configuration is the place where additional components of Tasker can be configured.
+ 
+  * `global-environment` - A list of environment variables that will be assigned to all tasks. Note that this variables are overwritten by `environment` variables section of each task in case of a conflict.
