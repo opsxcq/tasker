@@ -1,6 +1,5 @@
 package sh.strm.tasker;
 
-import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,16 +16,12 @@ public class TaskConfiguration {
 	private List<DockerTask> docker;
 
 	public void setDocker(List<DockerTask> docker) {
-		if (docker != null) {
-			HashSet<String> names = new HashSet<String>();
-			for (DockerTask task : docker) {
-				if (task != null) {
-					if (names.contains(task.getName())) {
-						throw new IllegalArgumentException("Task names must be unique");
-					}
-					names.add(task.getName());
-				}
-			}
+		// If some name is removed (namesCount != total size), it means that we had a duplicated name 
+		long namesCount = docker.stream().//
+				map(task -> task.getName()).//
+				distinct().count();
+		if (namesCount != docker.size()) {
+			throw new IllegalArgumentException("Task names must be unique");
 		}
 
 		this.docker = docker;
@@ -42,11 +37,6 @@ public class TaskConfiguration {
 
 	public DockerTask getDockerTaskByName(String name) {
 		return getDocker().stream().filter(task -> task.getName().equals(name)).findFirst().orElse(null);
-	}
-
-	@Override
-	public String toString() {
-		return "TaskConfiguration [docker=" + docker + "]";
 	}
 
 }
