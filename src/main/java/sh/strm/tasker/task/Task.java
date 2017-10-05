@@ -40,4 +40,6 @@ public abstract class Task {
 		this.notifiers = new ArrayList<Notifier>();
 	}
 
+	public abstract void check();
+
 }

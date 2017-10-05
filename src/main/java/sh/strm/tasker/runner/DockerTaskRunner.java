@@ -159,9 +159,7 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 		// Volumes
 		if (task.getVolumes() != null) {
 			for (String volume : task.getVolumes()) {
-				if (volume != null) {
-					hostConfig.appendBinds(volume);
-				}
+				hostConfig.appendBinds(volume);
 			}
 		}
 	}
@@ -185,9 +183,10 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 
 			container.cmd("-c", arguments.toString());
 		} else {
-			if (task.getEntrypoint() != null) {
-				container.entrypoint(task.getEntrypoint());
+			if (task.getEntrypoint() == null) {
+
 			}
+			container.entrypoint(task.getEntrypoint());
 
 			if (task.getArguments() != null) {
 				container.cmd(task.getArguments());
@@ -207,9 +206,7 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 			environment.addAll(Arrays.asList(task.getEnvironment()));
 		}
 
-		if (environment.size() > 0) {
-			container.env(environment);
-		}
+		container.env(environment);
 	}
 
 	private void createNetworkIfDoesntExist(String networkName) throws Exception {
