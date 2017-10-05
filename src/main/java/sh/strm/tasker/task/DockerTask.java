@@ -48,18 +48,16 @@ public class DockerTask extends Task {
 	}
 
 	public void setEnvironment(String... environment) {
-		if (environment != null && environment.length > 0) {
+		if (environment != null) {
 			for (String element : environment) {
-				if (element != null) {
-					if (!element.contains("=")) {
-						throw new IllegalArgumentException("Environment variables must follow the 'Variable=Value' format");
-					}
-					String split[] = element.split("=");
-					// It must be at least 2 tokens, why ? Variables can have '=' too, so we won't want to mess with that.
-					// Also verifies if both tokens contain something
-					if (split.length < 2 || split[0] == null || split[0].length() == 0 || split[1] == null || split[1].length() == 0) {
-						throw new IllegalArgumentException("Environment variables must follow the 'Variable=Value' format");
-					}
+				if (element == null) {
+					continue;
+				}
+				String split[] = element.split("=");
+				// It must be at least 2 tokens, why ? Variables can have '=' too, so we won't want to mess with that.
+				// Also verifies if both tokens contain something
+				if (split.length < 2 || split[0].length() == 0 || split[1].length() == 0) {
+					throw new IllegalArgumentException("Environment variables must follow the 'Variable=Value' format");
 				}
 			}
 		}
@@ -73,14 +71,12 @@ public class DockerTask extends Task {
 	public void setVolumes(String... volumes) {
 		if (volumes != null) {
 			for (String volume : volumes) {
-				if (volume != null) {
-					if (!volume.contains(":")) {
-						throw new IllegalArgumentException("Volumes must follow the 'volume1:volume2' format mapping");
-					}
-					String split[] = volume.split(":");
-					if (split.length != 2 || split[0] == null || split[0].length() == 0 || split[1] == null || split[1].length() == 0) {
-						throw new IllegalArgumentException("Volumes must follow the 'volume1:volume2' format mapping");
-					}
+				if (volume == null) {
+					continue;
+				}
+				String split[] = volume.split(":");
+				if (split.length != 2 || split[0].length() == 0 || split[1].length() == 0) {
+					throw new IllegalArgumentException("Volumes must follow the 'volume1:volume2' format mapping");
 				}
 			}
 		}
@@ -95,26 +91,21 @@ public class DockerTask extends Task {
 	public void setPorts(String... ports) {
 		if (ports != null) {
 			for (String port : ports) {
-				if (port != null) {
-					if (!port.contains(":")) {
-						throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping");
-					}
-					String split[] = port.split(":");
-					if (split.length != 2 || split[0] == null || split[0].length() == 0 || split[1] == null || split[1].length() == 0) {
-						throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping");
-					}
-					try {
-						int external = Integer.parseInt(split[0]);
-						int internal = Integer.parseInt(split[1]);
+				String split[] = port.split(":");
+				if (split.length != 2 || split[0].length() == 0 || split[1].length() == 0) {
+					throw new IllegalArgumentException("Port mapping must follow the 'hostPort:containerPort' format mapping");
+				}
+				try {
+					int external = Integer.parseInt(split[0]);
+					int internal = Integer.parseInt(split[1]);
 
-						if (external <= 0 || external > 0xFFFF || internal <= 0 || internal > 0xFFFF) {
-							throw new IllegalArgumentException(
-									"Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
-						}
-					} catch (NumberFormatException e) {
+					if (external <= 0 || external > 0xFFFF || internal <= 0 || internal > 0xFFFF) {
 						throw new IllegalArgumentException(
 								"Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
 					}
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException(
+							"Port mapping must follow the 'hostPort:containerPort' format mapping, and only use valid port numbers");
 				}
 			}
 		}
