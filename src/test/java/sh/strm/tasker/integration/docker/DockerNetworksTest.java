@@ -2,7 +2,6 @@ package sh.strm.tasker.integration.docker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -69,15 +68,16 @@ public class DockerNetworksTest {
 		task.setNetwork("ItWillWork");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerNetworkParseError() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setNetwork("");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		DockerTask task = new DockerTask();
+		task.setNetwork("");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testDockerNetworkParseErrorNull() throws Exception {
+		DockerTask task = new DockerTask();
+		task.setNetwork(null);
 	}
 
 }

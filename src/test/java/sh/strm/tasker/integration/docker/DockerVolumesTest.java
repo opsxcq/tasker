@@ -2,7 +2,6 @@ package sh.strm.tasker.integration.docker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,47 +51,41 @@ public class DockerVolumesTest {
 		client.removeVolume("testVolume");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerVolumeParseError() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setVolumes("ItWontWork");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		DockerTask task = new DockerTask();
+		task.setVolumes("ItWontWork");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerVolumeParseError2() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setVolumes("ItWontWork=2");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		DockerTask task = new DockerTask();
+		task.setVolumes("ItWontWork=2");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerVolumeParseError3() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setVolumes("ItWontWork:");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		DockerTask task = new DockerTask();
+		task.setVolumes("ItWontWork:");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testDockerVolumeParseError4() throws Exception {
+		DockerTask task = new DockerTask();
+		task.setVolumes("ItWontWork=");
 	}
 
 	@Test
-	public void testDockerVolumeParseError4() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setVolumes("ItWontWork=");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+	public void testDockerVolumeNull() throws Exception {
+		DockerTask task = new DockerTask();
+		String[] volumes = null;
+		task.setVolumes(volumes);
+	}
+
+	@Test
+	public void testDockerVolumeNullArray() throws Exception {
+		DockerTask task = new DockerTask();
+		String[] volumes = { null };
+		task.setVolumes(volumes);
 	}
 }
