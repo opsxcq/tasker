@@ -115,16 +115,52 @@ public class EmailNotifierTests {
 		assertThat(getMesssageContent(message)).isEqualTo(notifier.getContent());
 	}
 
+	@Test
+	public void testEmailNotificationWithoutSenderUnit() throws MessagingException, IOException {
+		EmailNotifier emailNotifier = new EmailNotifier();
+		String username = "username@domain.com";
+		String sender = "sender@domain.com";
+
+		// No sender
+		assertThat(emailNotifier.getSender()).isNull();
+
+		// Set the username, as there is no sender, use username as sender
+		emailNotifier.setUsername(username);
+		assertThat(emailNotifier.getSender()).isEqualTo(username);
+
+		// Set the sender, and assert that it is used as a sender
+		emailNotifier.setSender(sender);
+		assertThat(emailNotifier.getSender()).isEqualTo(sender);
+
+		// Set the username and expect the sender to not change
+		emailNotifier.setUsername(username);
+		assertThat(emailNotifier.getSender()).isEqualTo(sender);
+	}
+
 	// Connection
 
 	@Test
-	public void testEmailInvalidEmailServer() {
-		// TODO: Add a test with an invalid email server so it will fail loading the configuration
+	public void testEmailServerTestConnection() throws MessagingException {
+		String taskName = "helloNotifyEmail";
+
+		EmailNotifier notifier = getEmailNotifierForTask(taskName);
+		notifier.testConnection();
 	}
 
-	@Test
-	public void testEmailInvalidUsername() {
-		// TODO: Add a test with an invalid username/password so it will fail loading the configuration
+	@Test(expected = MessagingException.class)
+	public void testEmailInvalidEmailServer() throws MessagingException {
+		String taskName = "helloNotifyEmailServerConnectionProblem";
+
+		EmailNotifier notifier = getEmailNotifierForTask(taskName);
+		notifier.testConnection();
+	}
+
+	@Test(expected = MessagingException.class)
+	public void testEmailInvalidUsername() throws MessagingException {
+		String taskName = "helloNotifyEmailServerAuthProblem";
+
+		EmailNotifier notifier = getEmailNotifierForTask(taskName);
+		notifier.testConnection();
 	}
 
 	// Parse
