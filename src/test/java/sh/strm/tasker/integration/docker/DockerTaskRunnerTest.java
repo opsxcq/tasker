@@ -46,6 +46,13 @@ public class DockerTaskRunnerTest {
 	}
 
 	@Test
+	public void testDockerRunContainerOnlyEntrypoint() throws Exception {
+		DockerTask task = conf.getDockerTaskByName("helloOnlyEntrypoint");
+		TaskExecutionResult result = dockerRunner.executeTask(task);
+		assertEquals("root", result.getOutput());
+	}
+
+	@Test
 	public void testDockerRunContainerScript() throws Exception {
 		DockerTask task = conf.getDockerTaskByName("helloScript");
 		TaskExecutionResult result = dockerRunner.executeTask(task);
@@ -115,6 +122,12 @@ public class DockerTaskRunnerTest {
 		assertEquals("green bar", resultSecond.getOutput());
 
 		assertTrue("Remove container", client.removeContainer("helloRemoveExistingContainer"));
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testInvalidDockerEntrypointOrScript() throws Exception {
+		DockerTask task = new DockerTask();
+		task.check();
 	}
 
 }

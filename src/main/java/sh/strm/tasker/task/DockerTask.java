@@ -174,4 +174,11 @@ public class DockerTask extends Task {
 		this.reuseContainer = reuseContainer;
 	}
 
+	@Override
+	public void check() {
+		if (this.entrypoint == null && this.script == null) {
+			throw new IllegalStateException("Docker tasks should be defined with an entrypoint of a script to execute");
+		}
+	}
+
 }

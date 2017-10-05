@@ -158,6 +158,10 @@ tasks:
         - -c
         - echo green bar
         
+    - name: helloOnlyEntrypoint
+      image: debian:jessie
+      entrypoint: /usr/bin/whoami
+        
     - name: helloScript
       image: debian:jessie
       script:
