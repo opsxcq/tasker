@@ -1,7 +1,6 @@
 package sh.strm.tasker.notifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -117,15 +116,10 @@ public class NotifierTests {
 		assertThat(notifier.isNotifyOnError()).isFalse();
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testNotifierParseWhenInvalid() throws Exception {
-		try {
-			Notifier notifier = spy(Notifier.class);
-			notifier.setWhen(" it is invalid and should not be accepted ");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// Expected
-		}
+		Notifier notifier = spy(Notifier.class);
+		notifier.setWhen(" it is invalid and should not be accepted ");
 	}
 
 }
