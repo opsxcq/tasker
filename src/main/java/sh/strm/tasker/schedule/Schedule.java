@@ -25,9 +25,9 @@ public class Schedule {
 
 		if (every != null) {
 			// Convert `every` to a `cron` expression
-			this.cron = ScheduleParser.expressionToCron(every);
+			this.setCron(ScheduleParser.expressionToCron(every));
 		} else {
-			this.cron = null;
+			throw new IllegalArgumentException("Null isn't a valid every expression");
 		}
 	}
 

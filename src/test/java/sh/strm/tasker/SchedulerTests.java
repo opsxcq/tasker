@@ -1,8 +1,8 @@
 package sh.strm.tasker;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,33 +26,31 @@ public class SchedulerTests {
 	}
 
 	@Test
+	public void testScheduleSetEvery() throws Exception {
+		Schedule schedule = new Schedule();
+		schedule.setEvery("minute");
+		assertThat(schedule.getCron()).isEqualTo("0 * * * * *");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testScheduleSetEveryWithNull() throws Exception {
+		Schedule schedule = new Schedule();
+		schedule.setEvery(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
 	public void everyMinuteNotANumber() {
-		try {
-			ScheduleParser.expressionToCron("two minutes");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("two minutes");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyMinuteDecimal() {
-		try {
-			ScheduleParser.expressionToCron("1.2 minutes");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("1.2 minutes");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyMinuteNegativeNumber() {
-		try {
-			ScheduleParser.expressionToCron("-10 minutes");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("-10 minutes");
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -89,44 +87,24 @@ public class SchedulerTests {
 		assertEquals("0 */5 * * * *", ScheduleParser.expressionToCron("5 Minutes"));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserMinuteError() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("5 minutess");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("5 minutess");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserMinuteErrorTooMuchToken() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("2 2 minutes");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("2 2 minutes");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserMinuteErrorRangeLower() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("0 minutes");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("0 minutes");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserMinuteErrorRangeHigher() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("60 minutes");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("60 minutes");
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -163,44 +141,24 @@ public class SchedulerTests {
 		assertEquals("0 0 */2 * * *", ScheduleParser.expressionToCron("2 Hours"));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserHourError() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("5 hourss");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("5 hourss");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserHourErrorTooMuchToken() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("2 2 hours");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("2 2 hours");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserHourErrorRangeLower() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("0 hours");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("0 hours");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserHourErrorRangeHigher() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("24 hours");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("24 hours");
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -237,44 +195,24 @@ public class SchedulerTests {
 		assertEquals("0 0 0 */5 * *", ScheduleParser.expressionToCron("5 Days"));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserDayError() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("5 Dayz");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("5 Dayz");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserDayErrorTooMuchToken() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("2 2 days");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("2 2 days");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserDayErrorRangeLower() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("0 days");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("0 days");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserDayErrorRangeHigher() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("32 days");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("32 days");
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -311,44 +249,24 @@ public class SchedulerTests {
 		assertEquals("0 0 0 1 */6 *", ScheduleParser.expressionToCron("6 Months"));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserMonthError() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("6 Monthz");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("6 Monthz");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserMonthErrorTooMuchToken() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("2 2 months");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("2 2 months");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserMonthErrorRangeLower() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("0 months");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("0 months");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void everyParserMonthErrorRangeHigher() throws Exception {
-		try {
-			ScheduleParser.expressionToCron("12 months");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK, this is expected, go on
-		}
+		ScheduleParser.expressionToCron("12 months");
 	}
 
 	//////////////////////////////////////////////////////////////////////////
