@@ -21,9 +21,6 @@ public class Configuration {
 		if (environment != null) {
 			for (String element : environment) {
 				if (element != null) {
-					if (!element.contains("=")) {
-						throw new IllegalArgumentException("Environment variables must follow the 'Variable=Value' format");
-					}
 					String split[] = element.split("=");
 					// It must be at least 2 tokens, why ? Variables can have '=' too, so we won't want to mess with that.
 					// Also verifies if both tokens contain something
