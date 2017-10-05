@@ -1,0 +1,130 @@
+logging:
+  level:
+    org.springframework: WARN
+
+config:
+  global-environment:
+    - GLOBAL=green bar
+
+schedule:
+
+  - every: 1 minutes
+    task: hello
+    name: testEveryMinute
+
+  - every: hour
+    task: hello
+    name: testEveryHour
+
+  - every: 1 day
+    task: hello
+    name: testEveryDay
+    
+  - every: month
+    task: hello
+    name: testEveryMonth
+
+  # Run two times, at 11 and 16
+  - cron: 00 00 11,16 * * *
+    task: hello
+
+tasks:
+  docker:
+    - name: hello
+      image: debian:jessie
+      entrypoint: /bin/sh
+      arguments:
+        - -c
+        - echo green bar
+        
+    - name: helloOnlyEntrypoint
+      image: debian:jessie
+      entrypoint: /usr/bin/whoami
+        
+    - name: helloScript
+      image: debian:jessie
+      script:
+        - echo green bar
+        - echo green barbar
+        
+    - name: helloScriptPipe
+      image: debian:jessie
+      script:
+        - echo green bar
+        - echo wrong | grep -v wrong
+        - echo green barbar
+        
+    - name: helloScriptStrict
+      image: debian:jessie
+      script-strict: true
+      script:
+        - echo green bar
+        - echo red bar | grep -q green
+        - echo greener bar
+        
+    - name: helloEnvironmentVariables
+      image: debian:jessie
+      script:
+        - echo $BAR
+      environment:
+        - BAR=green bar 
+        
+    - name: helloEnvironmentVariablesGlobal
+      image: debian:jessie
+      script:
+        - echo $GLOBAL
+        
+    - name: helloEnvironmentVariablesGlobalOverride
+      image: debian:jessie
+      script:
+        - echo $GLOBAL
+      environment:
+        - GLOBAL=green is the bar
+        
+    - name: helloWithVolume01
+      image: debian:jessie
+      script:
+        - echo $expected > /mappedVolume/file
+      volumes:
+        - testVolume:/mappedVolume
+
+    - name: helloWithVolume02
+      image: debian:jessie
+      script:
+        - cat /mappedVolume/file
+      volumes:
+        - testVolume:/mappedVolume 
+
+    - name: helloAlwaysPull
+      image: debian:jessie
+      always-pull: true
+      script:
+        - echo green bar
+        
+    - name: helloWithNetwork01
+      image: debian:jessie
+      script:
+        - ping -c 4 helloWithNetwork02 >/dev/null && echo green bar
+      network: testNetwork
+
+    - name: helloWithNetwork02
+      image: debian:jessie
+      script:
+        - sleep 30
+        - echo green bar
+      network: testNetwork
+      
+    - name: helloReuseContainer
+      image: debian:jessie
+      reuse-container: true
+      script:
+        - if [ -f test ]; then echo green bar; fi
+        - touch test
+
+    - name: helloRemoveExistingContainer
+      image: debian:jessie
+      keep-container-after-execution: true
+      script:
+        - if [ -f test ]; then echo red bar; fi
+        - echo green bar
+        - touch test
