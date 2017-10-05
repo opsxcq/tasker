@@ -19,15 +19,23 @@ public class NotifierSetup {
 	private TaskConfiguration taskConfiguration;
 
 	@Autowired
-	private NotifierConfiguration conf;
+	private NotifierConfiguration configuration;
 
 	private static final Logger log = Logger.getLogger(NotifierSetup.class);
+
+	public void setConfiguration(NotifierConfiguration configuration) {
+		this.configuration = configuration;
+	}
+
+	public void setTaskConfiguration(TaskConfiguration taskConfiguration) {
+		this.taskConfiguration = taskConfiguration;
+	}
 
 	@PostConstruct
 	public void init() {
 		log.info("Notifier configuration loaded, wiring tasks and notifiers");
 
-		for (Notifier notifier : conf.getNotifiers()) {
+		for (Notifier notifier : configuration.getNotifiers()) {
 			log.info(notifier);
 
 			DockerTask task = taskConfiguration.getDockerTaskByName(notifier.getTask());
@@ -49,12 +57,12 @@ public class NotifierSetup {
 			if (notifier instanceof EmailNotifier) {
 				EmailNotifier emailNotifier = (EmailNotifier) notifier;
 				if (emailNotifier.isValidateServerOnConfigurationLoad()) {
-					log.info("Validating " + notifier.getName() + " notifier e-mail server connection");
+					log.info("Validating " + notifierName + " notifier e-mail server connection");
 					try {
 						emailNotifier.testConnection();
 					} catch (MessagingException e) {
-						log.error("Connection problems for notifier" + notifier.getName() + ", error: " + e.getMessage());
-						throw new IllegalArgumentException("Invalid notifier configuration for " + notifier.getName(), e);
+						log.error("Connection problems for notifier" + notifierName + ", error: " + e.getMessage());
+						throw new IllegalStateException("Invalid notifier configuration for " + notifier.getName(), e);
 					}
 				}
 

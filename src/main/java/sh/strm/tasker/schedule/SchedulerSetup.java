@@ -21,7 +21,7 @@ import sh.strm.tasker.task.DockerTask;
 public class SchedulerSetup {
 
 	@Autowired
-	private ScheduleConfiguration conf;
+	private ScheduleConfiguration configuration;
 	@Autowired
 	private TaskScheduler taskScheduler;
 
@@ -33,8 +33,12 @@ public class SchedulerSetup {
 
 	private static final Logger log = Logger.getLogger(SchedulerSetup.class);
 
-	public void setConf(ScheduleConfiguration conf) {
-		this.conf = conf;
+	public void setConfiguration(ScheduleConfiguration configuration) {
+		this.configuration = configuration;
+	}
+
+	public void setTaskConfiguration(TaskConfiguration taskConfiguration) {
+		this.taskConfiguration = taskConfiguration;
 	}
 
 	@PostConstruct
@@ -42,7 +46,7 @@ public class SchedulerSetup {
 		log.info("Scheduler configuration loaded, wiring tasks and schedules");
 
 		// Wire Task and Schedule configuration
-		for (Schedule schedule : conf.getSchedule()) {
+		for (Schedule schedule : configuration.getSchedule()) {
 			DockerTask task = taskConfiguration.getDockerTaskByName(schedule.getTask());
 
 			// Sanity check
@@ -60,7 +64,7 @@ public class SchedulerSetup {
 
 		}
 
-		for (Schedule schedule : conf.getSchedule()) {
+		for (Schedule schedule : configuration.getSchedule()) {
 			log.info(schedule);
 
 			Trigger trigger = new CronTrigger(schedule.getCron());

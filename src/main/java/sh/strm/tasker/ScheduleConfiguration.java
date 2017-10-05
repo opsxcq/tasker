@@ -23,6 +23,10 @@ public class ScheduleConfiguration {
 		return this.schedule;
 	}
 
+	public void setSchedule(List<Schedule> schedule) {
+		this.schedule = schedule;
+	}
+
 	public Schedule getScheduleByName(String name) {
 		return getSchedule().stream().filter(schedule -> schedule.getName().equals(name)).findFirst().orElse(null);
 	}
