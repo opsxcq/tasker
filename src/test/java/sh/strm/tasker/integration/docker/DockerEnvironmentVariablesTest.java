@@ -105,4 +105,11 @@ public class DockerEnvironmentVariablesTest {
 		configuration.setGlobalEnvironment(arguments);
 		assertThat(configuration.getGlobalEnvironment()).isNotNull();
 	}
+
+	public void testDockerEnvironmentParseVariablesGlobalNullArray() throws Exception {
+		Configuration configuration = new Configuration();
+		String[] arguments = { null };
+		configuration.setGlobalEnvironment(arguments);
+		assertThat(configuration.getGlobalEnvironment()).isNotNull();
+	}
 }
