@@ -139,7 +139,7 @@ public class DockerTaskRunner extends Runner<DockerTask> {
 			throws Exception {
 		// Configure container network
 		String networkName = task.getNetwork();
-		if (networkName != null && !networkName.equals("")) {
+		if (networkName != null) {
 			createNetworkIfDoesntExist(networkName);
 			hostConfig.networkMode(networkName);
 		}
