@@ -1,0 +1,203 @@
+logging:
+  level:
+    org.springframework: WARN
+
+notify:
+  email:
+    - name: notifyEmailTest
+      task: helloNotifyEmail
+      when: always
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+      validate-server-on-configuration-load: false
+
+      subject: Email subject
+      sender: myemail@gmail.com
+      recipients: admin@server.local
+      content: Task finished  
+      
+    - name: notifyEmailTestMultipleRecipients
+      task: helloNotifyEmailMultipleRecipients
+      when: always
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+      validate-server-on-configuration-load: false
+
+      subject: Email subject
+      sender: myemail@gmail.com
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: Task finished    
+
+    - name: notifyEmailTestMultilineContent
+      task: helloNotifyEmailMultilineContent
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      sender: myemail@gmail.com
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
+    - name: notifyEmailWithoutSender
+      task: helloNotifyEmailWithoutSender
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
+    - name: notifyEmailServerConnectionProblem
+      task: helloNotifyEmailServerConnectionProblem
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: thishostwillneverexist
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
+    - name: notifyEmailServerAuthProblem
+      task: helloNotifyEmailServerAuthProblem
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: thishostwillneverexist
+      port: 3025
+      username: invalid@server.local
+      password: invalid
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
+tasks:
+  docker:
+        
+    - name: hello
+      image: debian:jessie
+      entrypoint: /bin/sh
+      arguments:
+        - -c
+        - echo green bar
+
+    - name: helloNotify
+      image: debian:jessie
+      script:
+        - echo green bar
+
+    - name: helloNotifyAlways
+      image: debian:jessie
+      script:
+        - echo green bar
+        
+    - name: helloNotifyAlwaysError
+      image: debian:jessie
+      script:
+        - echo green bar     
+        - cat /invalidFile  
+
+    - name: helloNotifyOnError
+      image: debian:jessie
+      script:
+        - echo green bar
+        
+    - name: helloNotifyOnErrorError
+      image: debian:jessie
+      script:
+        - echo green bar     
+        - cat /invalidFile  
+        
+    - name: helloNotifyOnSuccess
+      image: debian:jessie
+      script:
+        - echo green bar
+        
+    - name: helloNotifyOnSuccessError
+      image: debian:jessie
+      script:
+        - echo green bar     
+        - cat /invalidFile  
+        
+    - name: helloNotifyEmail
+      image: debian:jessie
+      script:
+        - echo green bar   
+
+    - name: helloNotifyEmailMultipleRecipients
+      image: debian:jessie
+      script:
+        - echo green bar   
+    
+    - name: helloNotifyEmailMultilineContent
+      image: debian:jessie
+      script:
+        - echo green bar        
+    
+    - name: helloNotifyEmailWithoutSender
+      image: debian:jessie
+      script:
+        - echo green bar        
+
+    - name: helloNotifyEmailServerConnectionProblem
+      image: debian:jessie
+      script:
+        - echo green bar        
+
+    - name: helloNotifyEmailServerAuthProblem
+      image: debian:jessie
+      script:
+        - echo green bar        
+     
