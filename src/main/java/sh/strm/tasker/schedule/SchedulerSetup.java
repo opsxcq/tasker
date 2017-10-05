@@ -78,7 +78,7 @@ public class SchedulerSetup {
 						log.debug(result.getOutput());
 					} else {
 						log.debug("Task " + task.getName() + " suffered an unexpected error and Tasker was unable"
-								+ "to determine it's result, please check it");
+								+ " to determine it's result, please check it");
 					}
 
 				} catch (Exception e) {
