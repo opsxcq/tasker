@@ -58,6 +58,21 @@ public class DockerEnvironmentVariablesTest {
 		task.setEnvironment("ItWontWork=");
 	}
 
+	@Test()
+	public void testDockerEnvironmentParseVariablesNull() throws Exception {
+		DockerTask task = new DockerTask();
+		String[] arguments = null;
+		task.setEnvironment(arguments);
+		assertThat(task.getEnvironment()).isNotNull();
+	}
+
+	public void testDockerEnvironmentParseVariablesNullArray() throws Exception {
+		DockerTask task = new DockerTask();
+		String[] arguments = { null };
+		task.setEnvironment(arguments);
+		assertThat(task.getEnvironment()).isNotNull();
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////
 
 	@Test
@@ -112,4 +127,5 @@ public class DockerEnvironmentVariablesTest {
 		configuration.setGlobalEnvironment(arguments);
 		assertThat(configuration.getGlobalEnvironment()).isNotNull();
 	}
+
 }

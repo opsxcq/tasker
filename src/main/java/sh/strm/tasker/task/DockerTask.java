@@ -59,8 +59,10 @@ public class DockerTask extends Task {
 					}
 				}
 			}
+			this.environment = environment;
+		} else {
+			this.environment = new String[0];
 		}
-		this.environment = environment;
 	}
 
 	public String[] getVolumes() {

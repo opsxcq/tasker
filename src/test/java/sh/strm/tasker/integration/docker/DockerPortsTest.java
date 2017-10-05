@@ -50,6 +50,18 @@ public class DockerPortsTest {
 		task.setPorts("80:ItWontWork");
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testDockerPortsParseError6() throws Exception {
+		DockerTask task = new DockerTask();
+		task.setPorts(":ItWontWork");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testDockerPortsParseError7() throws Exception {
+		DockerTask task = new DockerTask();
+		task.setPorts(":ItWontWork:");
+	}
+
 	@Test
 	public void testDockerPortsNull() throws Exception {
 		DockerTask task = new DockerTask();

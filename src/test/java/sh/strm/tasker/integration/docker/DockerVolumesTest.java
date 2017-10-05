@@ -72,6 +72,18 @@ public class DockerVolumesTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testDockerVolumeParseError4() throws Exception {
 		DockerTask task = new DockerTask();
+		task.setVolumes(":ItWontWork");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testDockerVolumeParseError5() throws Exception {
+		DockerTask task = new DockerTask();
+		task.setVolumes(":ItWontWork:");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testDockerVolumeParseError6() throws Exception {
+		DockerTask task = new DockerTask();
 		task.setVolumes("ItWontWork=");
 	}
 
