@@ -18,7 +18,7 @@ public class Configuration {
 	}
 
 	public void setGlobalEnvironment(String... environment) {
-		if (environment != null && environment.length > 0) {
+		if (environment != null) {
 			for (String element : environment) {
 				if (element != null) {
 					if (!element.contains("=")) {
