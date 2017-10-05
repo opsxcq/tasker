@@ -27,13 +27,15 @@ public class Configuration {
 					String split[] = element.split("=");
 					// It must be at least 2 tokens, why ? Variables can have '=' too, so we won't want to mess with that.
 					// Also verifies if both tokens contain something
-					if (split.length < 2 || split[0] == null || split[0].length() == 0 || split[1] == null || split[1].length() == 0) {
+					if (split.length < 2 || split[0].length() == 0 || split[1].length() == 0) {
 						throw new IllegalArgumentException("Environment variables must follow the 'Variable=Value' format");
 					}
 				}
 			}
+			this.globalEnvironment = environment;
+		} else {
+			this.globalEnvironment = new String[0];
 		}
-		this.globalEnvironment = environment;
 	}
 
 }

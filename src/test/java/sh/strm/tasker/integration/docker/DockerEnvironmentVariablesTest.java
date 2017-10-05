@@ -1,7 +1,6 @@
 package sh.strm.tasker.integration.docker;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,51 +28,31 @@ public class DockerEnvironmentVariablesTest {
 	public void testDockerRunContainerEnvironmentVariables() throws Exception {
 		DockerTask task = conf.getDockerTaskByName("helloEnvironmentVariables");
 		TaskExecutionResult result = dockerRunner.executeTask(task);
-		assertEquals("green bar", result.getOutput());
+		assertThat(result.getOutput()).isEqualTo("green bar");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerEnvironmentParseVariablesError() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setEnvironment("ItWontWork");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		DockerTask task = new DockerTask();
+		task.setEnvironment("ItWontWork");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerEnvironmentParseVariablesError2() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setEnvironment("ItWontWork:2");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		DockerTask task = new DockerTask();
+		task.setEnvironment("ItWontWork:2");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerEnvironmentParseVariablesError3() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setEnvironment("ItWontWork:");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		DockerTask task = new DockerTask();
+		task.setEnvironment("ItWontWork:");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerEnvironmentParseVariablesError4() throws Exception {
-		try {
-			DockerTask task = new DockerTask();
-			task.setEnvironment("ItWontWork=");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		DockerTask task = new DockerTask();
+		task.setEnvironment("ItWontWork=");
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -82,46 +61,45 @@ public class DockerEnvironmentVariablesTest {
 	public void testDockerRunContainerEnvironmentVariablesGlobal() throws Exception {
 		DockerTask task = conf.getDockerTaskByName("helloEnvironmentVariablesGlobal");
 		TaskExecutionResult result = dockerRunner.executeTask(task);
-		assertEquals("green bar", result.getOutput());
+		assertThat(result.getOutput()).isEqualTo("green bar");
 	}
 
 	@Test
 	public void testDockerRunContainerEnvironmentVariablesGlobalOverride() throws Exception {
 		DockerTask task = conf.getDockerTaskByName("helloEnvironmentVariablesGlobalOverride");
 		TaskExecutionResult result = dockerRunner.executeTask(task);
-		assertEquals("green is the bar", result.getOutput());
+		assertThat(result.getOutput()).isEqualTo("green is the bar");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerEnvironmentParseVariablesGlobalError() throws Exception {
-		try {
-			Configuration configuration = new Configuration();
-			configuration.setGlobalEnvironment("ItWontWork");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		Configuration configuration = new Configuration();
+		configuration.setGlobalEnvironment("ItWontWork");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerEnvironmentParseVariablesGlobalError2() throws Exception {
-		try {
-			Configuration configuration = new Configuration();
-			configuration.setGlobalEnvironment("ItWontWork:2");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		Configuration configuration = new Configuration();
+		configuration.setGlobalEnvironment("ItWontWork:2");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDockerEnvironmentParseVariablesGlobalError3() throws Exception {
-		try {
-			Configuration configuration = new Configuration();
-			configuration.setGlobalEnvironment("ItWontWork=");
-			fail();
-		} catch (IllegalArgumentException e) {
-			// OK
-		}
+		Configuration configuration = new Configuration();
+		configuration.setGlobalEnvironment("ItWontWork=");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testDockerEnvironmentParseVariablesGlobalError4() throws Exception {
+		Configuration configuration = new Configuration();
+		configuration.setGlobalEnvironment("=ItWontWork");
+	}
+
+	@Test()
+	public void testDockerEnvironmentParseVariablesGlobalNull() throws Exception {
+		Configuration configuration = new Configuration();
+		String[] arguments = null;
+		configuration.setGlobalEnvironment(arguments);
+		assertThat(configuration.getGlobalEnvironment()).isNotNull();
 	}
 }
