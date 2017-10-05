@@ -18,6 +18,10 @@ public class TaskSetup {
 
 	private static final Logger log = Logger.getLogger(TaskSetup.class);
 
+	public void setConfiguration(TaskConfiguration conf) {
+		this.conf = conf;
+	}
+
 	@PostConstruct
 	public void init() {
 		log.info("Task configuration loaded, checking tasks");

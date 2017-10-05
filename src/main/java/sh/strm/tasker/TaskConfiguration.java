@@ -1,5 +1,6 @@
 package sh.strm.tasker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -28,6 +29,9 @@ public class TaskConfiguration {
 	}
 
 	public List<DockerTask> getDocker() {
+		if (this.docker == null) {
+			this.docker = new ArrayList<>();
+		}
 		return docker;
 	}
 
