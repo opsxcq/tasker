@@ -176,7 +176,7 @@ Every is a representation for a more simple understanding, like `every: minute`,
 
 Is possible to configure Tasker to notify other components when tasks finish. Notifications are triggered *after* the task is completed. Notifications are defined in the `notify` section of the configuration file, separated for each sub-type of notification, for example:
 
-```
+```yaml
 notify:
   email:
     - name: notifyEmailTest
@@ -202,7 +202,7 @@ Notifications need to be linked to a task, so a valid `task` should be informed.
   
 In Tasker, e-mail notifications are a sub-category of notifications. E-mail notifications are configured with `email:` field, inside the `notify` section. Bellow a simple example configuration using Gmail:
 
-```
+```yaml
 notify:
   email:
     - name: notifyEmailTest
@@ -217,7 +217,7 @@ notify:
 
 A complete example bellow
 
-```
+```yaml
 notify:
   email:
     - name: notifyMyTaskOnErrorOnly
