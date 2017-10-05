@@ -109,6 +109,46 @@ notify:
       content: |
         Multiline
         Task finished
+    - name: notifyEmailServerConnectionProblem
+      task: helloNotifyEmailServerConnectionProblem
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: thishostwillneverexist
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
+    - name: notifyEmailServerAuthProblem
+      task: helloNotifyEmailServerAuthProblem
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: thishostwillneverexist
+      port: 3025
+      username: invalid@server.local
+      password: invalid
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      content: |
+        Multiline
+        Task finished
 tasks:
   docker:
     - name: hello
@@ -260,6 +300,16 @@ tasks:
         - echo green bar        
     
     - name: helloNotifyEmailWithoutSender
+      image: debian:jessie
+      script:
+        - echo green bar        
+
+    - name: helloNotifyEmailServerConnectionProblem
+      image: debian:jessie
+      script:
+        - echo green bar        
+
+    - name: helloNotifyEmailServerAuthProblem
       image: debian:jessie
       script:
         - echo green bar        
