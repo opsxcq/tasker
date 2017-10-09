@@ -185,6 +185,7 @@ notify:
       server: mail.gmail.com
       subject: Email subject
       sender: myemail@gmail.com
+      content: Your message
 ```
 
 Notifications need to be linked to a task, so a valid `task` should be informed.
@@ -256,7 +257,19 @@ Configuration parameters regarding the e-mail to be sent:
  * `sender` - The `FROM` field in the e-mail.
  * `recipients` - A list of e-mail addresses that will receive the e-mail.
  * `content` - The content of the e-mail.
-  
+ * `template` - A velocity template that will be rendered and will generate the `content` of the message.
+ 
+ ### Email Template
+ 
+ If you wish to use the `template` property, you need to follow [Velocity Template Language specification](http://velocity.apache.org/engine/1.7/vtl-reference.html).
+ There are some variables that can be accessed in the context of the execution of the template, and those are:
+ 
+ * `success` - (Boolean) Will be `true` if the task was successful.
+ * `error` - (Boolean) Will be `true` if the task *wasn't* successful.
+ * `log` - (String) The output of the execution of the task.
+ * `task` - (String) The name of the executed task.
+ * `start` - (Date) The Java Date when the task started.
+ * `end` - (Date) The Java Date when the task finished.
   
 # Logging
 

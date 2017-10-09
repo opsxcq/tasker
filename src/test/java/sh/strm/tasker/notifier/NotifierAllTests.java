@@ -12,7 +12,7 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 
 @RunWith(Suite.class)
-@SuiteClasses({ NotifierTests.class, EmailNotifierTests.class })
+@SuiteClasses({ NotifierTests.class, EmailNotifierTests.class, EmailTemplateTest.class })
 public class NotifierAllTests {
 
 	public static class CustomTestYamlInitialization implements ApplicationContextInitializer<ConfigurableApplicationContext> {
