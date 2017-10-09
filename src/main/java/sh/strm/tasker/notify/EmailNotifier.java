@@ -1,5 +1,7 @@
 package sh.strm.tasker.notify;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Properties;
 
@@ -7,6 +9,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.context.Context;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -32,6 +37,8 @@ public class EmailNotifier extends Notifier {
 	private String sender;
 	private List<String> recipients;
 	private String content;
+
+	private String template;
 
 	public EmailNotifier() {
 		super();
@@ -173,6 +180,14 @@ public class EmailNotifier extends Notifier {
 		return content;
 	}
 
+	public void setTemplate(String template) {
+		this.template = template;
+	}
+
+	public String getTemplate() {
+		return template;
+	}
+
 	public void testConnection() throws MessagingException {
 		this.mailSender.testConnection();
 	}
@@ -186,8 +201,30 @@ public class EmailNotifier extends Notifier {
 		}
 	}
 
+	public String render(String templates, TaskExecutionResult result) {
+		StringWriter writer = new StringWriter();
+		StringReader reader = new StringReader(templates);
+		Context context = new VelocityContext();
+
+		context.put("success", result.isSuccessful());
+		context.put("error", !result.isSuccessful());
+		context.put("log", result.getOutput());
+		context.put("task", result.getTask().getName());
+
+		context.put("start", result.getStarted());
+		context.put("end", result.getFinished());
+
+		Velocity.evaluate(context, writer, "template", reader);
+
+		return writer.toString();
+	}
+
 	@Override
 	public void trigger(TaskExecutionResult result) {
+		if (this.template != null) {
+			this.content = this.render(this.template, result);
+		}
+
 		SimpleMailMessage message = new SimpleMailMessage();
 
 		message.setFrom(this.sender);

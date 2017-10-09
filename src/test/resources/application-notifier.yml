@@ -123,6 +123,27 @@ notify:
       content: |
         Multiline
         Task finished
+
+    - name: notifyEmailTemplate
+      task: helloNotifyEmailTemplate
+      when: always
+      validate-server-on-configuration-load: false
+
+      server: localhost
+      port: 3025
+      username: test@server.local
+      password: test
+      protocol: smtp
+      starttls: true
+      debug: true
+
+      subject: Email subject
+      recipients:
+        - admin@server.local
+        - admin2@server.local
+      template: |
+        The task $task was #if($success)successful#end
+        
 tasks:
   docker:
         
@@ -197,6 +218,11 @@ tasks:
         - echo green bar        
 
     - name: helloNotifyEmailServerAuthProblem
+      image: debian:jessie
+      script:
+        - echo green bar        
+
+    - name: helloNotifyEmailTemplate
       image: debian:jessie
       script:
         - echo green bar        

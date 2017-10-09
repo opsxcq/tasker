@@ -140,6 +140,21 @@ public class EmailNotifierTests {
 		assertThat(emailNotifier.getSender()).isEqualTo(sender);
 	}
 
+	@Test
+	public void testEmailNotificationTemplate() throws MessagingException {
+		String taskName = "helloNotifyEmailTemplate";
+
+		EmailNotifier notifier = getEmailNotifierForTask(taskName);
+		MimeMessage message = checkEmailNotification(taskName, "green bar");
+
+		assertThat(getFrom(message)).isEqualTo(notifier.getSender());
+		assertThat(message.getSubject()).isEqualTo(notifier.getSubject());
+
+		assertThat(message.getAllRecipients()).containsAll(getReceipients(notifier));
+
+		assertThat(GreenMailUtil.getBody(message)).isEqualTo("The task helloNotifyEmailTemplate was successful");
+	}
+
 	// Connection
 
 	@Test
