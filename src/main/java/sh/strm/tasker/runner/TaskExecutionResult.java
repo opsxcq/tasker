@@ -23,10 +23,6 @@ public class TaskExecutionResult {
 		this.task = task;
 	}
 
-	public Integer getExitCode() {
-		return exitCode;
-	}
-
 	public String getOutput() {
 		return output;
 	}
