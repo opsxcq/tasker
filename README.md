@@ -81,7 +81,7 @@ Configurations regarding container life cicle:
 
  * `keepContainerAfterExecution` - Keep container after it executes, won't delete it, *WARNING* it can leave a lot of trash. USE IT FOR DEBUGING ONLY !
  * `always-pull` - A boolean (true/false) property, when it's true, Tasker will pull a newer image version updating it if there is a newer one available.
- * `reuse-container` - If the container doesn't exist, create it, if there is already a container with that name, reuse the container.
+ * `reuse-container` - A boolean (true/false) property, if the container doesn't exist, create it, if there is already a container with that name, reuse the container.
  
 ## Entrypoint and Arguments
  
